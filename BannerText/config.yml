@@ -43,16 +43,15 @@ styles:
 # Base Indented            # Mojang Charge
 # Chief Indented           # 
 # 
+# Try to make sure each character has a default style!
+# Note: the '.' character is written as 'dot' to agree with the yaml parser.
+# 
 # Examples of each shape: https://minecraft.gamepedia.com/Banner
 # Online banner-making tool: http://www.planetminecraft.com/banner/
-# * note: Planet Minecraft's Bannershop tool errantly calls a Fess, 
-#   the horizontal bar shape, a Pale and vice versa.
 # 
 # Borderless letters from: https://www.youtube.com/watch?v=jLYvPD_vbZg
 # Bordered letters from: https://www.youtube.com/watch?v=PncIlxt8TtI
 # Numbers & symbols from: https://www.youtube.com/watch?v=xODU7WWTXYE
-# 
-# Try to make sure each character has a default style!
 # 
 patterns:
   A:
@@ -686,7 +685,7 @@ patterns:
       - Fess: true
     default:
       - Banner Base: false
-      - Pale: true
+      - Fess: true
       - Bordure: false
   '=':
     large:

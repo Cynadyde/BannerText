@@ -7,7 +7,7 @@ main: me.Cynadyde.BannerTextPlugin
 depend: []
 name: BannerText
 prefix: BTxt
-version: 2.9
+version: 1.0
 description: Convert text into banners
 author: Cynadyde; February 27th, 2017
 website: none

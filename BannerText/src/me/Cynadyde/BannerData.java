@@ -168,6 +168,8 @@ public class BannerData {
 		ItemStack banner = new ItemStack(Material.BANNER, 1);
 		BannerMeta bannerMeta = (BannerMeta) banner.getItemMeta();
 		
+		bannerMeta.setBaseColor(bgColor.getDyeColor());
+		
 		for (PatternShape shape : patterns.get(style).keySet()) {
 			PatternColor color = (patterns.get(style).get(shape))? txtColor : bgColor;
 			if (shape.equals(PatternShape.BASE)) { bannerMeta.setBaseColor(color.getDyeColor()); }

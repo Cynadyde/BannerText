@@ -213,14 +213,14 @@ public class BannerTextPlugin extends JavaPlugin {
 	public boolean showColorFormatHelp(CommandSender sender) {
 		sender.sendMessage(new String[] {
 				chatTag + ChatColor.GOLD + "--{ " + ChatColor.YELLOW + "Color Formatting Codes" + ChatColor.GOLD + " }--",
-				chatTag + ChatColor.GREEN + "0" + ChatColor.GRAY + ": Black_______" + ChatColor.GREEN + "8" + ChatColor.GRAY + ": Gray",
-				chatTag + ChatColor.GREEN + "1" + ChatColor.GRAY + ": Brown_______" + ChatColor.GREEN + "9" + ChatColor.GRAY + ": Blue",
-				chatTag + ChatColor.GREEN + "2" + ChatColor.GRAY + ": Green_______" + ChatColor.GREEN + "a" + ChatColor.GRAY + ": Lime",
-				chatTag + ChatColor.GREEN + "3" + ChatColor.GRAY + ": Cyan________" + ChatColor.GREEN + "b" + ChatColor.GRAY + ": Light Blue",
-				chatTag + ChatColor.GREEN + "4" + ChatColor.GRAY + ": Red_________" + ChatColor.GREEN + "c" + ChatColor.GRAY + ": Magenta",
-				chatTag + ChatColor.GREEN + "5" + ChatColor.GRAY + ": Purple______" + ChatColor.GREEN + "d" + ChatColor.GRAY + ": Pink",
-				chatTag + ChatColor.GREEN + "6" + ChatColor.GRAY + ": Orange______" + ChatColor.GREEN + "e" + ChatColor.GRAY + ": Yellow",
-				chatTag + ChatColor.GREEN + "7" + ChatColor.GRAY + ": Dark Gray___" + ChatColor.GREEN + "f" + ChatColor.GRAY + ": White",
+				chatTag + ChatColor.GREEN + "0" + ChatColor.GRAY + ": Black______" + ChatColor.GREEN + "8" + ChatColor.GRAY + ": Dark Gray",
+				chatTag + ChatColor.GREEN + "1" + ChatColor.GRAY + ": Brown______" + ChatColor.GREEN + "9" + ChatColor.GRAY + ": Blue",
+				chatTag + ChatColor.GREEN + "2" + ChatColor.GRAY + ": Green______" + ChatColor.GREEN + "a" + ChatColor.GRAY + ": Lime",
+				chatTag + ChatColor.GREEN + "3" + ChatColor.GRAY + ": Cyan_______" + ChatColor.GREEN + "b" + ChatColor.GRAY + ": Light Blue",
+				chatTag + ChatColor.GREEN + "4" + ChatColor.GRAY + ": Red________" + ChatColor.GREEN + "c" + ChatColor.GRAY + ": Magenta",
+				chatTag + ChatColor.GREEN + "5" + ChatColor.GRAY + ": Purple_____" + ChatColor.GREEN + "d" + ChatColor.GRAY + ": Pink",
+				chatTag + ChatColor.GREEN + "6" + ChatColor.GRAY + ": Orange_____" + ChatColor.GREEN + "e" + ChatColor.GRAY + ": Yellow",
+				chatTag + ChatColor.GREEN + "7" + ChatColor.GRAY + ": Gray_______" + ChatColor.GREEN + "f" + ChatColor.GRAY + ": White",
 				""
 		});
 		return true;

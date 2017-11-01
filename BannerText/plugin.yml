@@ -1,0 +1,35 @@
+# 
+# Plugin set-up file for BannerText Minecraft Plugin
+# (no website)
+# 
+
+main: me.Cynadyde.BannerTextPlugin
+depend: []
+name: BannerText
+prefix: BTxt
+version: 2.9
+description: Convert text into banners
+author: Cynadyde; February 27th, 2017
+website: none
+commands:
+    bannertext:
+        description: "bannertext plugin's command"
+    bt:
+        description: "shorthand for /bannertext"
+permissions:
+    bannertext.*:
+        description: "grants access to all plugin features"
+        default: op
+        children:
+            bannertext.get: true
+            bannertext.write: true
+            bannertext.reload: true
+    bannertext.get:
+        description: "grants ability to use the get command"
+        default: false
+    bannertext.write:
+        description: "grants ability to use the write command"
+        default: false
+    bannertext.reload:
+        description: "grants ability to reload the config file"
+        default: false

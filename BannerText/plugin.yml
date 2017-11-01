@@ -1,6 +1,6 @@
 # 
 # Plugin set-up file for BannerText Minecraft Plugin
-# (no website)
+# https://www.spigotmc.org/resources/bannertext.49049/
 # 
 
 main: me.Cynadyde.BannerTextPlugin
@@ -10,7 +10,7 @@ prefix: BTxt
 version: 1.0
 description: Convert text into banners
 author: Cynadyde; February 27th, 2017
-website: none
+website: https://www.spigotmc.org/resources/bannertext.49049/
 commands:
     bannertext:
         description: "bannertext plugin's command"

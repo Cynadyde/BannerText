@@ -4,6 +4,9 @@ in order of priority
 
 * **Resource:** Create and upload a video demonstration of the plugin.
 ---
+* **Bugfix:** There's a strange bug where using the "/bt get" command in survival mode
+does not genereate any banners.
+---
 * **Bugfix:** The semicolon ';' character cannot be used with the BannerText writer because it
 gets confused with the other semicolons used as delimeters in the writer's lore data.
 ---

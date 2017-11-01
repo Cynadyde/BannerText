@@ -65,8 +65,13 @@ public class BannerTextPlugin extends JavaPlugin {
 		
 		// Command: "/bannertext get <text...> [-style: <style>]"
 		// command: "/bannertext write <text...> [-style: <style>]"
-		else if (args[0].equals(commandGet) || args[0].equals(commandWrite)) {
-			if (!(sender.hasPermission(permissionGet))) {
+		boolean hasGetArg = args[0].equals(commandGet);
+		boolean hasWriteArg = args[0].equals(commandWrite);
+		
+		if (hasGetArg || hasWriteArg) {
+			
+			if ((hasGetArg && !(sender.hasPermission(permissionGet))) 
+					|| (hasWriteArg && !(sender.hasPermission(permissionWrite)))) {
 				sender.sendMessage(chatTag + ChatColor.RED + "Insufficient permissions...");
 				return false;
 			}
@@ -87,7 +92,7 @@ public class BannerTextPlugin extends JavaPlugin {
 				+ "Use \"/bannertext styles [<page>]\" to see available styles.");
 				return false;
 			}
-			if (args[0].equals(commandGet)) {
+			if (hasGetArg) {
 				return this.giveTextBanners(player, textArg, styleArg);
 			}
 			else {
@@ -132,8 +137,14 @@ public class BannerTextPlugin extends JavaPlugin {
 		List<String> options = new ArrayList<String>();
 
 		if (args.length == 0) {
-			if (sender.hasPermission(permissionGet)) {
-				options.add(commandGet);
+			
+			boolean canGet = sender.hasPermission(permissionGet);
+			boolean canWrite = sender.hasPermission(permissionWrite);
+			
+			if (canGet) { options.add(commandGet); }
+			if (canWrite) { options.add(commandWrite); }
+			
+			if (canGet || canWrite) {
 				options.add(commandStyles);
 				options.add(commandColors);
 			}

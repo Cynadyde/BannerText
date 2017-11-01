@@ -581,6 +581,16 @@ patterns:
       - Banner Base: false
       - Base Dexter Canton: true
       - Bordure: false
+  ',':
+    large:
+      - Banner Base: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+    default:
+      - Banner Base: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+      - Bordure: false
   '''':
     large:
       - Banner Base: false
@@ -611,6 +621,18 @@ patterns:
     default:
       - Banner Base: false
       - Base Dexter Canton: true
+      - Chief Dexter Canton: true
+      - Bordure: false
+  ';':
+    large:
+      - Banner Base: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+      - Chief Dexter Canton: true
+    default:
+      - Banner Base: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
       - Chief Dexter Canton: true
       - Bordure: false
   '!':
@@ -655,6 +677,12 @@ patterns:
       - Base Sinister Canton: true
       - Chief Dexter Canton: true
       - Bordure: false
+  '^':
+    default:
+      - Banner base: false
+      - Chief: true
+      - Lozenge: false
+      - Bordure Indented: false
   '*':
     large:
       - Banner Base: false

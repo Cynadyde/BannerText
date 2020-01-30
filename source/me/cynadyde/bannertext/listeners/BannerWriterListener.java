@@ -1,4 +1,4 @@
-package temp.listeners;
+package me.cynadyde.bannertext.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,8 +11,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import temp.BannerTextPlugin;
-import temp.BannerWriter;
+import me.cynadyde.bannertext.BannerTextPlugin;
+import me.cynadyde.bannertext.BannerWriter;
 
 public class BannerWriterListener implements Listener {
 

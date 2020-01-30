@@ -1,4 +1,4 @@
-package temp;
+package me.cynadyde.bannertext;
 
 import java.util.ArrayList;
 import java.util.HashMap;

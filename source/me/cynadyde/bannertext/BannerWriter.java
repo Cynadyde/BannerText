@@ -1,4 +1,4 @@
-package temp;
+package me.cynadyde.bannertext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import temp.exceptions.BadFormatterException;
+import me.cynadyde.bannertext.exceptions.BadFormatterException;
 
 public class BannerWriter {
 	

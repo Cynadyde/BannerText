@@ -1,4 +1,4 @@
-package temp;
+package me.cynadyde.bannertext;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import temp.exceptions.BadFormatterException;
-import temp.listeners.BannerWriterListener;
+import me.cynadyde.bannertext.exceptions.BadFormatterException;
+import me.cynadyde.bannertext.listeners.BannerWriterListener;
 
 public class BannerTextPlugin extends JavaPlugin {
 	

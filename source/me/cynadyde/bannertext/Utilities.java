@@ -1,4 +1,4 @@
-package temp;
+package me.cynadyde.bannertext;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

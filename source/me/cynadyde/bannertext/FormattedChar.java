@@ -1,4 +1,4 @@
-package temp;
+package me.cynadyde.bannertext;
 
 public class FormattedChar {
 	

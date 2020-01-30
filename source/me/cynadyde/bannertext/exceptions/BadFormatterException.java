@@ -1,4 +1,4 @@
-package temp.exceptions;
+package me.cynadyde.bannertext.exceptions;
 
 public class BadFormatterException extends Exception {
 	

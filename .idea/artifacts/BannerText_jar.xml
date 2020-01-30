@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="BannerText:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BannerText_jar</output-path>
+    <root id="archive" name="BannerText.jar">
+      <element id="module-output" name="BannerText" />
+    </root>
+  </artifact>
+</component>

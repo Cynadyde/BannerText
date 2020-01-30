@@ -1,4 +1,4 @@
-package me.Cynadyde;
+package temp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.Cynadyde.exceptions.BadFormatterException;
-import me.Cynadyde.listeners.BannerWriterListener;
+import temp.exceptions.BadFormatterException;
+import temp.listeners.BannerWriterListener;
 
 public class BannerTextPlugin extends JavaPlugin {
 	
@@ -263,7 +263,7 @@ public class BannerTextPlugin extends JavaPlugin {
 			}
 			else {
 				for (int i = startI; i < endI; i++) {
-					lines.add(chatTag + ChatColor.GRAY + String.valueOf(i + 1) + ". " + ChatColor.GREEN + styles[i] 
+					lines.add(chatTag + ChatColor.GRAY + String.valueOf(i + 1) + " " + ChatColor.GREEN + styles[i]
 							+ ChatColor.GRAY + " - " + BannerData.getStyleDesc(styles[i]));
 				}
 				lines.add("");

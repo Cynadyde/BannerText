@@ -1,4 +1,4 @@
-package me.Cynadyde;
+package temp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.Cynadyde.exceptions.BadFormatterException;
+import temp.exceptions.BadFormatterException;
 import net.md_5.bungee.api.ChatColor;
 
 public class BannerFactory {

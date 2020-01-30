@@ -1,4 +1,4 @@
-package me.Cynadyde;
+package temp;
 
 import org.bukkit.block.banner.PatternType;
 

@@ -1,4 +1,4 @@
-package me.Cynadyde;
+package temp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,18 +82,18 @@ public class BannerData {
 					PatternShape shape = PatternShape.getByDisplay(shapeKey);
 					if (shape == null) {
 						plugin.getLogger().warning("Malformed config node-- invalid banner shape in "
-								+ "'patterns." + character + "." + styleKey + "': '"
+								+ "'patterns." + character + "" + styleKey + "': '"
 								+ String.valueOf(shapeKey) + "'");
 						continue;
 					}
 					if (layer == null) {
 						plugin.getLogger().warning("Malformed config node-- invalid shape layer in "
-								+ "'patterns." + character + "." + styleKey + "': '"
+								+ "'patterns." + character + "" + styleKey + "': '"
 								+ String.valueOf(layer) + "'");
 						continue;
 					}
 					
-					plugin.debugMsg("Loaded: %s: %s", String.join(".", new String[] {"patterns", charKey, 
+					plugin.debugMsg("Loaded: %s: %s", String.join("", new String[] {"patterns", charKey,
 							styleKey, String.valueOf(i), shapeKey}), String.valueOf(layer));
 					
 					shapes.put(shape, layer);

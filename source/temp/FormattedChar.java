@@ -1,4 +1,4 @@
-package me.Cynadyde;
+package temp;
 
 public class FormattedChar {
 	

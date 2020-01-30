@@ -1,4 +1,4 @@
-package me.Cynadyde.exceptions;
+package temp.exceptions;
 
 public class BadFormatterException extends Exception {
 	

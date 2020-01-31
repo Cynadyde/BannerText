@@ -1,35 +1,30 @@
-# 
-# Plugin set-up file for BannerText Minecraft Plugin
+#
+# plugin.yml file for BannerText Spigot MC Plugin
 # https://www.spigotmc.org/resources/bannertext.49049/
-# 
-
-main: me.Cynadyde.BannerTextPlugin
-depend: []
+#
+main: me.cynadyde.bannertext.BannerTextPlugin
 name: BannerText
-prefix: BTxt
-version: 1.0
-description: Convert text into banners
-author: Cynadyde; February 27th, 2017
+version: "1.15.2-0"
+description: Converts text into banners
+author: Cynadyde (Feb, 2017)
 website: https://www.spigotmc.org/resources/bannertext.49049/
 commands:
-    bannertext:
-        description: "bannertext plugin's command"
-    bt:
-        description: "shorthand for /bannertext"
+  bannertext:
+    description: "root plugin command"
 permissions:
-    bannertext.*:
-        description: "grants access to all plugin features"
-        default: op
-        children:
-            bannertext.get: true
-            bannertext.write: true
-            bannertext.reload: true
-    bannertext.get:
-        description: "grants ability to use the get command"
-        default: false
-    bannertext.write:
-        description: "grants ability to use the write command"
-        default: false
-    bannertext.reload:
-        description: "grants ability to reload the config file"
-        default: false
+  bannertext.*:
+    description: "grants access to all plugin features"
+    default: op
+    children:
+      bannertext.get: true
+      bannertext.write: true
+      bannertext.reload: true
+  bannertext.get:
+    description: "grants ability to use the get command"
+    default: false
+  bannertext.write:
+    description: "grants ability to use the write command"
+    default: false
+  bannertext.config:
+    description: "grants ability to reload the config file"
+    default: false

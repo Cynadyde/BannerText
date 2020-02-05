@@ -1,344 +1,421 @@
 package me.cynadyde.bannertext;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-import me.cynadyde.bannertext.exceptions.BadFormatterException;
-import me.cynadyde.bannertext.listeners.BannerWriterListener;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-public class BannerTextPlugin extends JavaPlugin {
-	
-	public static final String chatTag = ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA
-			+ "BTxt" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
-	
-	public static final String permissionGet = "bannertext.get";
-	public static final String permissionWrite = "bannertext.write";
-	public static final String permissionReload = "bannertext.reload";
-	
-	public static final String command = "bannertext";
-	public static final String commandGet = "get";
-	public static final String commandWrite = "write";
-	public static final String commandColors = "colors";
-	public static final String commandStyles = "styles";
-	public static final String commandReload = "reload";
-	
-	public static boolean debugMode = false;
-	
-	private BannerWriterListener writerListener;
-	
-	@Override
-	public void onEnable() {
+/**
+ * The main class of the BannerText Spigot MC Plugin.
+ */
+public class BannerTextPlugin extends JavaPlugin implements Listener {
 
-		this.getCommand(command).setExecutor(this);
-		this.getCommand("bt").setExecutor(this);
-		
-		this.loadConfigValues();
-		
-		this.writerListener = new BannerWriterListener(this);
-		this.getServer().getPluginManager().registerEvents(writerListener, this);
-		
-		this.getLogger().info("Successfully enabled " + this.getName() + "!");
-	}
+    private static final Supplier<IllegalStateException> NOT_ENABLED = () ->
+            new IllegalStateException("plugin has not been fully enabled yet.");
 
-	@Override
-	public void onDisable() {
-		
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		
-		// Command: "/bannertext"
-		if (args.length == 0) {
-			return this.showPluginHelp(sender, 0);
-		}
-		
-		// Command: "/bannertext get <text...> [-style: <style>]"
-		// command: "/bannertext write <text...> [-style: <style>]"
-		boolean hasGetArg = args[0].equals(commandGet);
-		boolean hasWriteArg = args[0].equals(commandWrite);
-		
-		if (hasGetArg || hasWriteArg) {
-			
-			if ((hasGetArg && !(sender.hasPermission(permissionGet))) 
-					|| (hasWriteArg && !(sender.hasPermission(permissionWrite)))) {
-				sender.sendMessage(chatTag + ChatColor.RED + "Insufficient permissions...");
-				return false;
-			}
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(chatTag + ChatColor.RED + "You must be in-game to use this command!");
-				return false;
-			}
-			if (args.length < 2) {
-				sender.sendMessage(chatTag + ChatColor.RED + "Invalid usage: missing argument <text...>");
-				return false;
-			}
-			Player player = (Player) sender;
-			int keyIndex = Utilities.arrayIndexOf(args, "-style:");
-			String textArg = String.join(" ", Utilities.arraySlice(args, 1, (keyIndex != -1)? keyIndex : null));
-			String styleArg = (keyIndex != -1)? String.join(" ", Utilities.arraySlice(args, keyIndex + 1, null)) : "default";
-			if (!BannerData.isStyle(styleArg)) {
-				player.sendMessage(chatTag + ChatColor.RED + String.format("Invalid style: '%s'... ", styleArg) 
-				+ "Use \"/bannertext styles [<page>]\" to see available styles.");
-				return false;
-			}
-			if (hasGetArg) {
-				return this.giveTextBanners(player, textArg, styleArg);
-			}
-			else {
-				return this.giveTextBannerWriter(player, textArg, styleArg);
-			}
-		}
-		
-		// Command: "/bannertext colors"
-		else if (args[0].equals(commandColors)) {
-			if (!(sender.hasPermission(permissionGet))) {
-				sender.sendMessage(chatTag + ChatColor.RED + "Insufficient permissions...");
-				return false;
-			}
-			return this.showColorFormatHelp(sender);
-		}
-		
-		// Command: "/bannertext styles [<page>]"
-		else if (args[0].equals(commandStyles)) {
-			if (!(sender.hasPermission(permissionGet))) {
-				sender.sendMessage(chatTag + ChatColor.RED + "Insufficient permissions...");
-				return false;
-			}
-			int page = Utilities.intValueOf(Utilities.arrayGet(args, 1, "0"), 0);
-			return this.showStyleList(sender, page);
-		}
-		
-		// Command: "/bannertext reload"
-		else if (args[0].equals(commandReload)) {
-			if (!sender.hasPermission(permissionReload)) {
-				sender.sendMessage(chatTag + ChatColor.RED + "Insufficient permissions...");
-			}
-			return this.reloadConfig(sender);
-		}
-		int page = Utilities.intValueOf(Utilities.arrayGet(args, 1, "1"), 1);
-		this.showPluginHelp(sender, page);
-		return false;
-	}
-	
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		
-		List<String> options = new ArrayList<String>();
+    private PluginCommand rootCmd;
 
-		if (args.length == 0) {
-			
-			boolean canGet = sender.hasPermission(permissionGet);
-			boolean canWrite = sender.hasPermission(permissionWrite);
-			
-			if (canGet) { options.add(commandGet); }
-			if (canWrite) { options.add(commandWrite); }
-			
-			if (canGet || canWrite) {
-				options.add(commandStyles);
-				options.add(commandColors);
-			}
-		}
-		return options;
-	}
-	
-	/** Loads the config file's values into the plugin */
-	public void loadConfigValues() {
-		
-		long timeStart = System.currentTimeMillis();
-		
-		if (!(new File(getDataFolder(), "config.yml")).exists()) { saveDefaultConfig(); }
-		
-		this.reloadConfig();
-		
-		debugMode = getConfig().getBoolean("debug-mode", false);
-		
-		BannerData.loadStyles(this, getConfig());
-		BannerData.loadPatterns(this, getConfig());
-		
-		this.getLogger().info(String.format("Successfully loaded config! Took... %dms", 
-				System.currentTimeMillis() - timeStart));
-	}
-	
-	/** Prints a formtted debugging message if in debugging mode */
-	public void debugMsg(String fMsg, Object...objs) {
-		if (debugMode) { this.getLogger().info("\u001B[36m[Debug] " + String.format(fMsg, objs) + "\u001B[0m"); }
-	}
-	
-	/** Get a reference to the bannertext-writer listener */
-	public BannerWriterListener getWriterListener() {
-		return this.writerListener;
-	}
-	
-	/** Shows the sender general information about the plugin and its commands */
-	public boolean showPluginHelp(CommandSender sender, int page) {
-		if (page == 0) {
-			sender.sendMessage(new String[] {
-					chatTag + ChatColor.GOLD + "--{ " + ChatColor.YELLOW + "Plugin help" + ChatColor.GOLD + " | page " + 
-							ChatColor.RED + "0" + ChatColor.GOLD + " / " + ChatColor.RED + "1" + ChatColor.GOLD + " }--",
-					chatTag + ChatColor.AQUA + "Name: " + ChatColor.GRAY + getDescription().getName(),
-					chatTag + ChatColor.AQUA + "Version: " + ChatColor.GRAY + getDescription().getVersion(),
-					chatTag + ChatColor.AQUA + "Desc: " + ChatColor.GRAY + getDescription().getDescription(),
-					chatTag + ChatColor.AQUA + "Authors: " + ChatColor.GRAY + String.join(", ", getDescription().getAuthors()),
-					chatTag + ChatColor.AQUA + "Website: " + ChatColor.WHITE + getDescription().getWebsite(),
-					chatTag + ChatColor.YELLOW + "--------------------------------",
-					chatTag + ChatColor.GRAY + "Use " + ChatColor.GREEN + "/bt help 1" 
-							+ ChatColor.GRAY + " to view command help on the next page.",
-					""
-			});
-		}
-		else {
-			sender.sendMessage(new String[] {
-					chatTag + ChatColor.GOLD + "--{ " + ChatColor.YELLOW + "Plugin help" + ChatColor.GOLD + " | page " + 
-							ChatColor.RED + "1" + ChatColor.GOLD + " / " + ChatColor.RED + "1" + ChatColor.GOLD + " }--",
-					chatTag + ChatColor.GREEN + "/bannertext get <text...> [-style: <style>]",
-					chatTag + ChatColor.GRAY + "  Creates banners for the given text and style.",
-					chatTag + ChatColor.GRAY + "  Use the formatter &[0-f][0-f] to change the text",
-					chatTag + ChatColor.GRAY + "  and background color. && becomes a literal '&'.",
-					chatTag + ChatColor.GREEN + "/bannertext write <text...> [-style: <style>]",
-					chatTag + ChatColor.GRAY + "  Creates a writer for the given text and style.",
-					chatTag + ChatColor.GRAY + "  Use the formatter &[0-f][0-f] to change the text",
-					chatTag + ChatColor.GRAY + "  and background color. && becomes a literal '&'.",
-					chatTag + ChatColor.GREEN + "/bannertext colors",
-					chatTag + ChatColor.GRAY + "  Display each color formatter code value",
-					chatTag + ChatColor.GREEN + "/bannertext styles [<page>]",
-					chatTag + ChatColor.GRAY + "  Get a list of all available styles.",
-					chatTag + ChatColor.GREEN + "/bannertext reload",
-					chatTag + ChatColor.GRAY + "  Reloads the plugin's configuration file.",
-			});
-		}
-		return true;
-	}
-	
-	/** Shows the sender information on using the plugin's color codes */
-	public boolean showColorFormatHelp(CommandSender sender) {
-		sender.sendMessage(new String[] {
-				chatTag + ChatColor.GOLD + "--{ " + ChatColor.YELLOW + "Color Formatting Codes" + ChatColor.GOLD + " }--",
-				chatTag + ChatColor.GREEN + "0" + ChatColor.GRAY + ": Black______" + ChatColor.GREEN + "8" + ChatColor.GRAY + ": Dark Gray",
-				chatTag + ChatColor.GREEN + "1" + ChatColor.GRAY + ": Brown______" + ChatColor.GREEN + "9" + ChatColor.GRAY + ": Blue",
-				chatTag + ChatColor.GREEN + "2" + ChatColor.GRAY + ": Green______" + ChatColor.GREEN + "a" + ChatColor.GRAY + ": Lime",
-				chatTag + ChatColor.GREEN + "3" + ChatColor.GRAY + ": Cyan_______" + ChatColor.GREEN + "b" + ChatColor.GRAY + ": Light Blue",
-				chatTag + ChatColor.GREEN + "4" + ChatColor.GRAY + ": Red________" + ChatColor.GREEN + "c" + ChatColor.GRAY + ": Magenta",
-				chatTag + ChatColor.GREEN + "5" + ChatColor.GRAY + ": Purple_____" + ChatColor.GREEN + "d" + ChatColor.GRAY + ": Pink",
-				chatTag + ChatColor.GREEN + "6" + ChatColor.GRAY + ": Orange_____" + ChatColor.GREEN + "e" + ChatColor.GRAY + ": Yellow",
-				chatTag + ChatColor.GREEN + "7" + ChatColor.GRAY + ": Gray_______" + ChatColor.GREEN + "f" + ChatColor.GRAY + ": White",
-				""
-		});
-		return true;
-	}
-	
-	/** Shows the sender a list of styles with their description */
-	public boolean showStyleList(CommandSender sender, int page) {
-		
-		String[] message;
-		
-		{
-			ArrayList<String> lines = new ArrayList<String>();
-			String[] styles = BannerData.getAllStyles();
-			
-			int itemsPerPage = 8;
-			int maxPage = (int) (Math.ceil((double) styles.length / (double) itemsPerPage)) - 1;
-			page = Math.max(0, Math.min(page, maxPage));
-			
-			lines.add(chatTag + ChatColor.GOLD + "--{" + ChatColor.YELLOW 
-					+ " Character Styles " + ChatColor.GOLD 
-					+ "| page " + ChatColor.RED + String.valueOf(page) + ChatColor.GOLD + " / " 
-					+ ChatColor.RED + String.valueOf(maxPage) + ChatColor.GOLD + " }--");
-			
-			int startI = Math.max(0, Math.min(page * itemsPerPage, styles.length - 1));
-			int endI = Math.max(1, Math.min(startI + itemsPerPage, styles.length));
-			if (styles.length == 0) { 
-				lines.add(chatTag + ChatColor.GRAY + "" + ChatColor.ITALIC + "No results to display..."); 
-				message = lines.toArray(new String[lines.size()]);
-			}
-			else {
-				for (int i = startI; i < endI; i++) {
-					lines.add(chatTag + ChatColor.GRAY + String.valueOf(i + 1) + " " + ChatColor.GREEN + styles[i]
-							+ ChatColor.GRAY + " - " + BannerData.getStyleDesc(styles[i]));
-				}
-				lines.add("");
-				message = lines.toArray(new String[lines.size()]);
-			}
-		}
-		sender.sendMessage(message);
-		return true;
-	}
-	
-	/** Reads the config values back into the plugin */
-	public boolean reloadConfig(CommandSender sender) {
-		Bukkit.broadcast(chatTag + ChatColor.GOLD + sender.getName() + " has reloaded the config", permissionReload);
-		this.loadConfigValues();
-		return true;
-	}
-	
-	/** Attempts to give the player banners or a ticket for the requested text */
-	public boolean giveTextBanners(Player player, String text, String style) {
+    /**
+     * Reloads the plugin's configuration, registers its
+     * event listeners, and sets up its root command.
+     */
+    @Override
+    public void onEnable() {
 
-		long timeStart = System.currentTimeMillis();
-		
-		List<ItemStack> banners;
-		try { 
-			banners = BannerFactory.buildBanners(this, text, style); 
-		} 
-		catch (BadFormatterException e) {
-			player.sendMessage(chatTag + ChatColor.RED + e.getMessage());
-			return false;
-		}
-		String name = BannerFactory.formatterPattern.matcher(text).replaceAll("");
-		List<ItemStack> chests = BannerFactory.packageBanners(this, banners, name);
-		
-		HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(chests.toArray(new ItemStack[chests.size()]));
-		
-		if (!leftovers.isEmpty()) {
-			for (ItemStack leftover : leftovers.values()) {
-				player.getWorld().dropItem(player.getLocation(), leftover);
-			}
-		}
-		
-		this.debugMsg("took %dms to run: giveTextBanners(%s, %s, %s);", 
-				System.currentTimeMillis() - timeStart, player, text, style);
-		
-		return true;
-	}
-	
-	/** Attempts to give the player a banner writer for the requested text */
-	public boolean giveTextBannerWriter(Player player, String text, String style) {
-		
-		long timeStart = System.currentTimeMillis();
-		
-		ItemStack writer;
-		try {
-			writer = BannerFactory.buildBannerWriter(this, text, style);
-		}
-		catch (BadFormatterException e) {
-			player.sendMessage(chatTag + ChatColor.RED + e.getMessage());
-			return false;
-		}
-		if (writer == null) {
-			player.sendMessage(chatTag + ChatColor.RED + "Sorry; none of those characters were recognized! "
-					+ "Try adding them to the plugin's config?");
-			return false;
-		}
-		HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(writer);
-		if (!leftovers.isEmpty()) {
-			for (ItemStack leftover : leftovers.values()) {
-				player.getWorld().dropItem(player.getLocation(), leftover);
-			}
-		}
-		
-		this.debugMsg("took %dms to run: giveTextBannerWriter(%s, %s, %s);", 
-				System.currentTimeMillis() - timeStart, player, text, style);
-		
-		return true;
-	}
+        reloadConfig();
+
+        getServer().getPluginManager().registerEvents(this, this);
+
+        rootCmd = Objects.requireNonNull(getCommand(Cmd.ROOT.getLabel()));
+        rootCmd.setExecutor(this);
+        rootCmd.setTabCompleter(this);
+    }
+
+    /**
+     * Executes the plugin's root command and sub commands.
+     */
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender,
+            @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+
+        if (command == getRootCmd()) {
+            if (args.length > 0) {
+                boolean hasGetArg = args[0].equalsIgnoreCase(Cmd.GET.getLabel());
+                boolean hasWriteArg = args[0].equalsIgnoreCase(Cmd.WRITE.getLabel());
+
+                if (hasGetArg || hasWriteArg) {
+
+                    if ((hasGetArg && !Cmd.GET.checkPerms(sender))
+                            || (hasWriteArg && !Cmd.WRITE.checkPerms(sender))) {
+                        Msg.NO_PERMS.to(sender);
+                        return false;
+                    }
+                    if (!(sender instanceof Player)) {
+                        Msg.NOT_PLAYER.to(sender);
+                        return false;
+                    }
+                    if (args.length < 2) {
+                        Msg.BAD_USAGE.to(sender);
+                        return false;
+                    }
+                    Player player = (Player) sender;
+                    String textArg = String.join(" ", Utils.arraySlice(args, 1, null));
+
+                    if (hasGetArg) {
+                        doGiveTextBanners(player, textArg);
+                        Msg.GOT_BANNERS.to(player);
+                        return true;
+                    }
+                    else {
+                        doGiveBannerWriter(player, textArg);
+                        Msg.GOT_WRITER.to(player);
+                        return true;
+                    }
+                }
+                else if (args[0].equalsIgnoreCase(Cmd.RELOAD.getLabel())) {
+
+                    if (!Cmd.RELOAD.checkPerms(sender)) {
+                        Msg.NO_PERMS.to(sender);
+                        return false;
+                    }
+                    reloadConfig();
+                    Msg.DID_CONFIG.toAll(Cmd.RELOAD.getPerm(), sender.getName());
+                    return true;
+                }
+            }
+            sender.sendMessage(Msg.getInfo());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Tab completes the plugin's sub commands command.
+     */
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender,
+            @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+
+        if (command == rootCmd) {
+
+            List<String> options = new ArrayList<>();
+            if (args.length == 1) {
+                for (Cmd cmd : Cmd.ROOT.getChildren()) {
+                    if (cmd.getLabel().startsWith(args[0].toLowerCase())) {
+                        if (cmd.checkPerms(sender)) {
+                            options.add(cmd.getLabel());
+                        }
+                    }
+                }
+            }
+            return options;
+        }
+        return null;
+    }
+
+    /**
+     * Handles a player's usage of the banner writer.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+
+        if (event.getItem() == null) {
+            return;
+        }
+        BannerWriter writer = BannerWriter.createFrom(event.getItem());
+        if (writer == null) {
+            return;
+        }
+        if (event.getAction() == Action.LEFT_CLICK_AIR
+                || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+
+            if (event.getPlayer().isSneaking()) {
+                writer.setPos(writer.getPos() - 1);
+            }
+        }
+        else if (event.getAction() == Action.RIGHT_CLICK_AIR
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE
+                    && event.useInteractedBlock() != Event.Result.DENY
+                    && event.useItemInHand() != Event.Result.DENY) {
+
+                event.getItem().setAmount(2);  // keeps item stack size at 1
+            }
+
+            if (event.getPlayer().isSneaking()) {
+                getServer().getScheduler().runTaskLater(this,  // why is this is executed next tick..?
+                        () -> writer.setPos(writer.getPos() + 1), 1L);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The plugin's commands, messages, and banner pattern chars are refreshed.
+     */
+    @Override
+    public void reloadConfig() {
+
+        long timeStart = System.currentTimeMillis();
+
+        saveDefaultConfig();
+        super.reloadConfig();
+
+        Cmd.reload(this);
+        Msg.reload(this);
+
+        BannerFactory.reloadPatternChars(this);
+
+        this.getLogger().info(String.format("reloaded the config in %dms",
+                System.currentTimeMillis() - timeStart));
+    }
+
+    /**
+     * Gets the plugin's root command.
+     */
+    public @NotNull PluginCommand getRootCmd() {
+        if (rootCmd == null) {
+            throw NOT_ENABLED.get();
+        }
+        return rootCmd;
+    }
+
+    /**
+     * Attempts to give the specified player banners for the requested text.
+     */
+    public void doGiveTextBanners(Player player, String text) {
+
+        long timeStart = System.currentTimeMillis();
+
+        if (!getConfig().getBoolean("case-sensitive")) {
+            text = text.toUpperCase();
+        }
+
+        String name = BannerFactory.stripFormat(text);
+        List<ItemStack> banners = BannerFactory.buildBanners(text);
+        List<ItemStack> chests = BannerFactory.packageBanners(banners, name);
+
+        Utils.giveItems(player, chests.toArray(new ItemStack[0]));
+
+        debugMsg("took %dms to run: doGiveTextBanners(%s, %s);",
+                System.currentTimeMillis() - timeStart, player, text);
+    }
+
+    /**
+     * Attempts to give the specified player a banner writer for the requested text.
+     */
+    public void doGiveBannerWriter(Player player, String text) {
+
+        long timeStart = System.currentTimeMillis();
+
+        if (!getConfig().getBoolean("case-sensitive")) {
+            text = text.toUpperCase();
+        }
+        ItemStack writer = BannerWriter.createNew(text).getItem();
+        Utils.giveItems(player, writer);
+
+        this.debugMsg("took %dms to run: giveTextBannerWriter(%s, %s);",
+                System.currentTimeMillis() - timeStart, player, text);
+    }
+
+    /**
+     * Prints a formatted debugging message if in debugging mode.
+     */
+    void debugMsg(String message, Object... objects) {
+        if (getConfig().getBoolean("debug-mode", false)) {
+            this.getLogger().info("\u001B[36m[Debug] " + String.format(message, objects) + "\u001B[0m");
+        }
+    }
+
+    /**
+     * The plugin's permissions.
+     */
+    public enum Perm {
+
+        GET("bannertext.get"),
+        WRITE("bannertext.write"),
+        CONFIG("bannertext.config");
+
+        private final String node;
+
+        Perm(String node) {
+            this.node = node;
+        }
+
+        public @NotNull String getNode() {
+            return node;
+        }
+    }
+
+    /**
+     * The plugin's commands.
+     */
+    public enum Cmd {
+
+        ROOT("bannertext", Cmd.GET, Cmd.WRITE, Cmd.RELOAD),
+        GET("get", Perm.GET),
+        WRITE("write", Perm.WRITE),
+        RELOAD("reloadconfig", Perm.CONFIG);
+
+        private final String label;
+        private final Perm permission;
+        private final List<Cmd> children;
+
+        private String usage;
+        private String description;
+
+        Cmd(String label, Cmd... children) {
+            this(label, null, children);
+        }
+
+        Cmd(String label, Perm permission, Cmd... children) {
+            this.label = label;
+            this.permission = permission;
+            this.children = Collections.unmodifiableList(Arrays.asList(children));
+        }
+
+        public @NotNull String getLabel() {
+            return label;
+        }
+
+        public @NotNull Perm getPerm() {
+            return permission;
+        }
+
+        public @NotNull List<Cmd> getChildren() {
+            return children;
+        }
+
+        public @NotNull String getUsage() {
+            if (usage == null) {
+                throw NOT_ENABLED.get();
+            }
+            return usage;
+        }
+
+        public @NotNull String getDescription() {
+            if (description == null) {
+                throw NOT_ENABLED.get();
+            }
+            return description;
+        }
+
+        public boolean checkPerms(CommandSender sender) {
+            return permission == null || sender.hasPermission(permission.getNode());
+        }
+
+        public static void reload(BannerTextPlugin plugin) {
+
+            ConfigurationSection commands = Objects.requireNonNull(
+                    plugin.getConfig().getConfigurationSection("chat.commands"));
+
+            for (Cmd cmd : values()) {
+                ConfigurationSection command = Objects.requireNonNull(
+                        commands.getConfigurationSection(cmd.name()));
+
+                cmd.usage = command.getString("usage");
+                cmd.description = command.getString("description");
+            }
+        }
+    }
+
+    /**
+     * The plugin's messages.
+     */
+    public enum Msg {
+
+        NO_PERMS,
+        NOT_PLAYER,
+        BAD_CMD,
+        BAD_USAGE,
+        BAD_ARG,
+        ERR_WRITER,
+        ERR_BANNERS,
+        GOT_WRITER,
+        GOT_BANNERS,
+        DID_CONFIG;
+
+        private static String tag;
+        private static String info;
+
+        private String template;
+
+        public @NotNull String getTemplate() {
+            if (template == null) {
+                throw NOT_ENABLED.get();
+            }
+            return template;
+        }
+
+        public void to(CommandSender sender, Object... objects) {
+            Msg.chat(sender, getTemplate(), objects);
+        }
+
+        public void toAll(Perm permission, Object... objects) {
+            Msg.broadcast(permission, getTemplate(), objects);
+        }
+
+        public static void chat(CommandSender sender, String message, Object... objects) {
+            sender.sendMessage(getTag() + Utils.chatFormat(message, objects));
+        }
+
+        public static void broadcast(Perm permission, String message, Object... objects) {
+            Bukkit.broadcast(getTag() + Utils.chatFormat(message, objects), permission.getNode());
+        }
+
+        public static void reload(BannerTextPlugin plugin) {
+
+            ConfigurationSection chat = Objects.requireNonNull(plugin.getConfig().getConfigurationSection("chat"));
+            ConfigurationSection chatMsgs = Objects.requireNonNull(chat.getConfigurationSection("messages"));
+
+            tag = Utils.chatFormat(chat.getString("tag"));
+
+            String helpPage = chat.getString("help-page");
+            String cmdFormat = chat.getString("cmd-format");
+
+            info = Utils.chatFormat(helpPage,
+                    plugin.getDescription().getFullName(),
+                    plugin.getDescription().getDescription(),
+                    plugin.getDescription().getWebsite(),
+                    Arrays.stream(Cmd.values())
+                            .map((cmd -> Utils.chatFormat(cmdFormat, cmd.getUsage(), cmd.getDescription())))
+                            .collect(Collectors.joining("\n")));
+
+            for (Msg msg : values()) {
+                msg.template = Objects.requireNonNull(chatMsgs.getString(msg.name()));
+            }
+        }
+
+        public static @NotNull String getTag() {
+            if (tag == null) {
+                throw NOT_ENABLED.get();
+            }
+            return tag;
+        }
+
+        public static @NotNull String getInfo() {
+            if (info == null) {
+                throw NOT_ENABLED.get();
+            }
+            return info;
+        }
+    }
 }

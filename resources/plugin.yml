@@ -5,7 +5,10 @@
 main: me.cynadyde.bannertext.BannerTextPlugin
 name: BannerText
 version: "1.15.2-0"
-description: Converts text into banners
+description: |
+  Swiftly convert chat text into banners. Use '&[0-9a-f][0-9a-f]'
+  to set the text and background colors. Use '&[klmnor]' to set
+  the text style. Use '&&' to form a literal ampersand.
 author: Cynadyde (Feb, 2017)
 website: https://www.spigotmc.org/resources/bannertext.49049/
 commands:

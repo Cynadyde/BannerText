@@ -1,168 +1,255 @@
 package me.cynadyde.bannertext;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
-import me.cynadyde.bannertext.exceptions.BadFormatterException;
-import net.md_5.bungee.api.ChatColor;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+/**
+ * Facilitates the creation of banners and banner text writers.
+ */
 public class BannerFactory {
-	
-	public static final char escapeChar = '&';
-	
-	public static final Pattern formatterPattern = Pattern.compile("&[&0-9a-f][0-9a-f]");
-	
-	public static final String resultNameTemplate = ChatColor.DARK_GRAY + "< " + ChatColor.DARK_AQUA 
-			+ "%s '&%c%c' " + ChatColor.BOLD + "'%c'" + ChatColor.DARK_GRAY + " | " + ChatColor.DARK_AQUA 
-			+ "%d of %s" + ChatColor.DARK_GRAY + " >";
-	
-	public static final String packageNameTemplate = ChatColor.DARK_GRAY + "< " + ChatColor.DARK_AQUA + "" 
-			+ ChatColor.BOLD + "%s" + ChatColor.DARK_GRAY + " | " + ChatColor.DARK_AQUA + "%d of %d" 
-			+ ChatColor.DARK_GRAY + " >";
 
-	/** Looks through the given text and specifies the text and bg color of each character */
-	public static List<FormattedChar> parseText(String text) throws BadFormatterException {
-		
-		List<FormattedChar> parsed = new ArrayList<FormattedChar>();
+    private static final Map<Character, PatternChar> patternChars = new HashMap<>();
 
-		PatternColor fgColor = PatternColor.WHITE;
-		PatternColor bgColor = PatternColor.BLACK;
-		
-		char[] textChars = text.toCharArray();
-		int escapeLevel = 0;
-		
-		for (int i = 0; i < textChars.length; i++) {
-			
-			char character = Character.toUpperCase(textChars[i]);
-			
-			if (character == escapeChar) {
-				if (escapeLevel == 2) {
-					escapeLevel = 0;
-				} 
-				else if (escapeLevel == 0) {
-					escapeLevel = 2;
-					continue;
-				}
-				else {
-					String fmtr = text.substring(i - 1, (i + ((i + 2 >= text.length())? 1 : 2)));
-					throw new BadFormatterException(text, fmtr, i - 1);
-				}
-			}
-			if (escapeLevel > 0) {
-				if (escapeLevel == 2) {
-					
-					fgColor = PatternColor.getByChar(character);
-					if (fgColor == null) {
-						String fmtr = text.substring(i - 1, (i + ((i + 2 >= text.length())? 1 : 2)));
-						throw new BadFormatterException(text, fmtr, i - 1);
-					}
-					escapeLevel--;
-					continue;
-				}
-				else if (escapeLevel == 1) {
-					
-					bgColor = PatternColor.getByChar(character);
-					if (bgColor == null) {
-						String fmtr = text.substring(i - 1, (i + ((i + 2 >= text.length())? 1 : 2)));
-						throw new BadFormatterException(text, fmtr, i - 1);
-					}
-					escapeLevel--;
-					continue;
-				}
-			}
-			parsed.add(new FormattedChar(fgColor, bgColor, character));
-		}
-		parsed.add(new FormattedChar(fgColor, bgColor, ' '));
-		return parsed;
-	}
-	
-	/** Converts the given text into a list of text banners of the specified style */
-	public static List<ItemStack> buildBanners(BannerTextPlugin plugin, String text, String style) throws BadFormatterException {
-		
-		List<FormattedChar> formattedText = BannerFactory.parseText(text);
-		List<ItemStack> banners = new ArrayList<ItemStack>();
-		
-		for (int i = 0; i < formattedText.size(); i++) {
-			
-			FormattedChar c = formattedText.get(i);
-			
-			BannerData bannerPattern = BannerData.get(c.getChar());	
-			
-			ItemStack banner = bannerPattern.getBanner(style, c.getFgColor(), c.getBgColor());
-			
-			ItemMeta bannerMeta = banner.getItemMeta();
-			bannerMeta.setDisplayName(String.format(resultNameTemplate, 
-					style, c.getFgColor().getChar(), c.getBgColor().getChar(), 
-					Character.toUpperCase(c.getChar()), i, formattedText.size() - 1));
-			
-			banner.setItemMeta(bannerMeta);
-			banners.add(banner);
-			
-			plugin.debugMsg("Built Banner: %s\n", banner.toString());
-		}
-		
-//		plugin.debugMsg("Built Banner: %s\n", banners.stream()
-//				.map(Object::toString).collect(Collectors.joining("\n")));
-		
-		return banners;
-	}
-	
-	/** Packages the given banners into a list of chests */
-	public static List<ItemStack> packageBanners(BannerTextPlugin plugin, List<ItemStack> banners, String name) {
-		
-		if (name.length() > 16) {
-			name = name.substring(0, 13) + "...";
-		}
-		
-		List<List<ItemStack>> stacks = new ArrayList<List<ItemStack>>();
-		
-		{
-			List<ItemStack> stack = new ArrayList<ItemStack>();
-			int size = 0;
+    public static final Pattern FORMATTER_PATTERN = Pattern.compile("&(?:([klmnor])|([0-9a-f])([0-9a-f]))");
+    public static final String RESULT_NAME_TEMPLATE = Utils.chatFormat("&8< &3'%c&%c%c' &b&l'%c' &8| &7%d of %d &8>");
+    public static final String PACKAGE_NAME_TEMPLATE = Utils.chatFormat("&8< &b&l%s &8| &7%d of %d &8>");
 
-			for (ItemStack banner : banners) {
-				
-				if (size >= 27) {
-					stacks.add(stack);
-					stack = new ArrayList<ItemStack>();
-					size = 0;
-				}
-				stack.add(banner);
-				size++;
-			}
-			stacks.add(stack);
-		}
+    public static final Set<Material> BANNER_MATERIALS;
 
-		List<ItemStack> chests = new ArrayList<ItemStack>();
-		
-		for (int i = 0; i < stacks.size(); i++) {
-			List<ItemStack> stack = stacks.get(i);
-			
-			ItemStack chest = new ItemStack(Material.CHEST, 1);
-			BlockStateMeta chestMeta = (BlockStateMeta) chest.getItemMeta();
-			Chest chestState = (Chest) chestMeta.getBlockState();
-			
-			chestMeta.setDisplayName(String.format(packageNameTemplate, name, i, stacks.size() - 1));
-			chestState.getBlockInventory().addItem(stack.toArray(new ItemStack[stack.size()]));
-			
-			chestMeta.setBlockState(chestState);
-			chest.setItemMeta(chestMeta);
-			
-			chests.add(chest);
-		}
-		return chests;
-	}
-	
-	/** Creates a banner writer item from the given text and style */
-	public static ItemStack buildBannerWriter(BannerTextPlugin plugin, String text, String style) throws BadFormatterException {
-		BannerWriter writer = BannerWriter.createNew(plugin, text, style);
-		return (writer == null)? null : writer.getSkin();
-	}
+    static {
+        Set<Material> mats = new HashSet<>();
+        for (PatternColor c : PatternColor.values()) {
+            mats.add(c.getMat());
+        }
+        BANNER_MATERIALS = Collections.unmodifiableSet(mats);
+    }
+
+    /**
+     * Strips all formatting codes in the given text.
+     */
+    public static String stripFormat(String chatText) {
+        return FORMATTER_PATTERN.matcher(chatText.replace("&&", "&")).replaceAll("");
+    }
+
+    /**
+     * Looks through the given text and specifies the text style, color, and background of each character.
+     */
+    public static List<FormattedChar> parseText(String chatText) {
+
+        String text = chatText.replace("&&", "&");
+        Matcher matcher = FORMATTER_PATTERN.matcher(text);
+        List<FormattedChar> chars = new ArrayList<>();
+
+        PatternStyle ts = PatternStyle.DEFAULT;
+        PatternColor fg = PatternColor.WHITE;
+        PatternColor bg = PatternColor.BLACK;
+
+        String tsStr, fgStr, bgStr;
+        int i = 0, stop, pickup;
+
+        while (i < text.length()) {
+
+            if (matcher.find()) {
+                tsStr = matcher.group(1);
+                fgStr = matcher.group(2);
+                bgStr = matcher.group(3);
+
+                stop = matcher.start();
+                pickup = matcher.end();
+            }
+            else {
+                tsStr = fgStr = bgStr = null;
+                stop = text.length();
+                pickup = -1;
+            }
+            while (i < stop) {
+                chars.add(new FormattedChar(ts, fg, bg, text.charAt(i)));
+                i++;
+            }
+            if (tsStr != null) { ts = PatternStyle.getByChar(tsStr.charAt(0)); }
+            if (fgStr != null) { fg = PatternColor.getByChar(fgStr.charAt(0)); }
+            if (bgStr != null) { bg = PatternColor.getByChar(bgStr.charAt(0)); }
+            if (pickup != -1) { i = pickup; }
+
+            if (ts == PatternStyle.DEFAULT) {
+                fg = PatternColor.WHITE;
+                bg = PatternColor.BLACK;
+            }
+        }
+        return chars;
+    }
+
+    /**
+     * Gets a banner to represent the given character in the given text style,
+     * with the given foreground and background colors.
+     */
+    public static @NotNull ItemStack getBanner(char character, PatternStyle ts, PatternColor fg, PatternColor bg) {
+
+        return patternChars.getOrDefault(character, PatternChar.DEFAULT).toBanner(ts, fg, bg);
+    }
+
+    /**
+     * Converts the given text into a list of text banners.
+     */
+    public static List<ItemStack> buildBanners(String text) {
+
+        List<FormattedChar> fText = BannerFactory.parseText(text);
+        List<ItemStack> banners = new ArrayList<>();
+
+        for (int i = 0; i < fText.size(); i++) {
+
+            FormattedChar c = fText.get(i);
+            ItemStack banner = getBanner(c.getChar(), c.getTs(), c.getFg(), c.getBg());
+
+            ItemMeta bannerMeta = banner.getItemMeta();
+            if (bannerMeta != null) {
+                bannerMeta.setDisplayName(String.format(RESULT_NAME_TEMPLATE,
+                        c.getTs().getChar(), c.getFg().getChar(), c.getBg().getChar(),
+                        c.getChar(), i, fText.size() - 1));
+
+                banner.setItemMeta(bannerMeta);
+            }
+            banners.add(banner);
+        }
+        return banners;
+    }
+
+    /**
+     * Packages the given banners into a list of chests.
+     */
+    public static List<ItemStack> packageBanners(List<ItemStack> banners, String name) {
+
+        if (name.length() > 16) {
+            name = name.substring(0, 13) + "...";
+        }
+
+        List<List<ItemStack>> stacks = new ArrayList<>();
+        {
+            List<ItemStack> stack = new ArrayList<>();
+            int size = 0;
+
+            for (ItemStack banner : banners) {
+                if (size >= 27) {
+                    stacks.add(stack);
+                    stack = new ArrayList<>();
+                    size = 0;
+                }
+                stack.add(banner);
+                size++;
+            }
+            stacks.add(stack);
+        }
+        List<ItemStack> chests = new ArrayList<>();
+
+        for (int i = 0; i < stacks.size(); i++) {
+            List<ItemStack> stack = stacks.get(i);
+
+            ItemStack chest = new ItemStack(Material.CHEST, 1);
+            BlockStateMeta chestMeta = Objects.requireNonNull((BlockStateMeta) chest.getItemMeta());
+            Chest chestState = (Chest) chestMeta.getBlockState();
+
+            chestMeta.setDisplayName(String.format(PACKAGE_NAME_TEMPLATE, name, i, stacks.size() - 1));
+            chestState.getBlockInventory().addItem(stack.toArray(new ItemStack[0]));
+
+            chestMeta.setBlockState(chestState);
+            chest.setItemMeta(chestMeta);
+
+            chests.add(chest);
+        }
+        return chests;
+    }
+
+    /**
+     * Creates a banner writer for the given text.
+     */
+    public static ItemStack buildBannerWriter(String text) {
+        return BannerWriter.createNew(text).getItem();
+    }
+
+    /**
+     * Parses the plugin's config to reload a collection of valid pattern characters.
+     */
+    public static void reloadPatternChars(BannerTextPlugin plugin) {
+
+        final String KEY = "banners";
+
+        patternChars.clear();
+
+        ConfigurationSection yaml = plugin.getConfig().getConfigurationSection(KEY);
+        if (yaml == null) {
+            plugin.getLogger().warning("Malformed config: missing '" + KEY + "' node. " +
+                    "Remove the broken config to regenerate defaults!");
+            return;
+        }
+
+        for (String charKey : yaml.getKeys(false)) {
+            if (charKey.length() != 1) {
+                plugin.getLogger().warning("Malformed config node: " +
+                        "key isn't a single character: '" + KEY + "." + charKey + "'.");
+                continue;
+            }
+            char character;
+            if (!plugin.getConfig().getBoolean("case-sensitive")) {
+                character = charKey.toUpperCase().charAt(0);
+            }
+            else {
+                character = charKey.charAt(0);
+            }
+
+            Map<PatternStyle, PatternDesign> designs = new HashMap<>();
+
+            ConfigurationSection ymlDesigns = Objects.requireNonNull(yaml.getConfigurationSection(charKey));
+            for (String styleKey : ymlDesigns.getKeys(false)) {
+
+                Map<PatternShape, Boolean> shapes = new HashMap<>();
+
+                List<Map<?, ?>> ymlShapes = ymlDesigns.getMapList(styleKey);
+
+                for (int i = 0; i < ymlShapes.size(); i++) {
+                    Map<?, ?> entry = ymlShapes.get(i);
+
+                    if (entry.isEmpty()) {
+                        plugin.getLogger().warning("Malformed config node: " +
+                                "wrong structure at '" + KEY + "." + character + "." + styleKey + "'");
+                        continue;
+                    }
+
+                    Object ymlShapeKey = entry.keySet().toArray()[0];
+                    Object ymlLayer = entry.values().toArray()[0];
+
+                    if (!(ymlShapeKey instanceof String) || !(ymlLayer instanceof String)) {
+                        plugin.getLogger().warning("Malformed config node: " +
+                                "wrong structure at '" + KEY + "." + character + "." + styleKey + "[" + i + "]'");
+                        continue;
+                    }
+                    String shapeKey = (String) entry.keySet().toArray()[0];
+                    Boolean layer = (Boolean) entry.values().toArray()[0];
+
+                    PatternShape shape = PatternShape.getByDisplay(shapeKey);
+                    if (shape == null) {
+                        plugin.getLogger().warning("Malformed config node: invalid banner shape in "
+                                + "'" + KEY + "." + character + "" + styleKey + "': '" + shapeKey + "'");
+                        continue;
+                    }
+                    if (layer == null) {
+                        plugin.getLogger().warning("Malformed config node: invalid shape layer in "
+                                + "'" + KEY + "." + character + "" + styleKey + "': '" + layer + "'");
+                        continue;
+                    }
+                    shapes.put(shape, layer);
+                }
+                designs.put(PatternStyle.valueOf(styleKey.toUpperCase()), new PatternDesign(shapes));
+            }
+            patternChars.put(character, new PatternChar(designs));
+        }
+    }
 }

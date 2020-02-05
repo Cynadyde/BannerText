@@ -4,36 +4,53 @@
 #
 chat:
   tag: "&8[&3BannerText&8]&r "
-  message:
-    no-perms: "&cYou do not have permission to do that!"
-    not-player: "&cYou must be a player to do that!"
-    bad-cmd: "&cUnknown command given: %s"
-    bad-usage: "&cBad usage: &6%s"
-    bad-arg: "&cBad argument: &e%s"
-    err-writer: "&cCould not get a writer: &6%s"
-    err-banners: "&cCould not get banners: &6%s"
-    got-writer: "&aGot a writer successfully!"
-    got-banners: "&aGot banners successfully!"
-    did-config: "&6The config was reloaded by &e%s"
+  help-page: |
+    &6%s
+    &b%s
+    &7&a%s
+    %s
+  cmd-format: "&d%s &f- &7%s"
+  messages:
+    NO_PERMS: "&cYou do not have permission to do that!"
+    NOT_PLAYER: "&cYou must be a player to do that!"
+    BAD_CMD: "&cUnknown command given: %s"
+    BAD_USAGE: "&cBad usage: &6%s"
+    BAD_ARG: "&cBad argument: &e%s"
+    ERR_WRITER: "&cCould not get a writer: &6%s"
+    ERR_BANNERS: "&cCould not get banners: &6%s"
+    GOT_WRITER: "&aGot a writer successfully!"
+    GOT_BANNERS: "&aGot banners successfully!"
+    DID_CONFIG: "&6The config was reloaded by &e%s"
+  commands:
+    ROOT:
+      usage: "/bannertext"
+      description: "displays plugin help & info"
+    GET:
+      usage: "/bannertext get <text...>"
+      description: "converts the given text into banners"
+    WRITE:
+      usage: "/bannertext write <text...>"
+      description: "creates a banner writer tool for the given text"
+    RELOAD:
+      usage: "/bannertext reloadconfig"
+      description: "reloads the plugin's configuration file"
 
-# List and describe your styles here so that users may use them
-# and see them with the command "/bannertext styles [<page>]"
-styles:
-  default: "slightly smaller; bordered"
-  large: "takes up the entire banner; no border"
+# setting this true will require new banners
+# to be made for lower case characters.
+case-sensitive: false
 
 # Below are listed all of the characters that can be converted into banners.
 # If you decide to add more patterns, here's an example of the format:
 # 
 # {CHARACTER}:                  # A single character that can be read from the game chat
-#   {STYLE NAME}:               # One of the style names defined above
+#   {STYLE}:                    # Can be default, obfuscated, bold, strike, underline, or italic.
 #     - Banner: {FRONT?}        # All banners should start with a base 'Banner' pattern.
 #     - {MORE SHAPES}: {FRONT?} # Add as many patterns as you need to the banner.
 # 
 # {FRONT?} tells the plugin what color each pattern will be.
 # It will be either 'yes' for text color or 'no' for background.
 # 
-# Here's are two different lists of valid pattern names:
+# Here are two different lists for valid pattern names:
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/banner/PatternType.html
 #
 # Banner                   # Saltire                     # Per Fess
@@ -57,8 +74,8 @@ styles:
 # Borderless letters from: https://www.youtube.com/watch?v=jLYvPD_vbZg
 # Bordered letters from: https://www.youtube.com/watch?v=PncIlxt8TtI
 # Numbers & symbols from: https://www.youtube.com/watch?v=xODU7WWTXYE
-# 
-banner:
+#
+banners:
   A:
     default:
       - Banner: yes
@@ -68,7 +85,7 @@ banner:
       - Pale Dexter: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Pale Dexter: yes
@@ -82,7 +99,7 @@ banner:
       - Chief: yes
       - Fess: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Pale Dexter: yes
@@ -96,7 +113,7 @@ banner:
       - Chief: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Base: yes
@@ -108,7 +125,7 @@ banner:
       - Per Bend: no
       - Bend: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Lozenge: no
       - Chief: yes
@@ -123,7 +140,7 @@ banner:
       - Chief: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Fess: yes
       - Pale Sinister: no
@@ -138,7 +155,7 @@ banner:
       - Pale Dexter: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Fess: yes
       - Pale Sinister: no
@@ -153,7 +170,7 @@ banner:
       - Pale Dexter: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Sinister: yes
       - Per Fess: no
@@ -167,7 +184,7 @@ banner:
       - Pale Sinister: yes
       - Pale Dexter: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Chief: no
       - Base: no
@@ -180,7 +197,7 @@ banner:
       - Base: yes
       - Pale: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base: yes
       - Chief: yes
@@ -193,7 +210,7 @@ banner:
       - Base: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Dexter: yes
       - Per Fess: no
@@ -208,7 +225,7 @@ banner:
       - Per Pale Inverted: no
       - Saltire: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Fess: yes
       - Pale Sinister: no
@@ -221,7 +238,7 @@ banner:
       - Pale Dexter: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Dexter: yes
       - Base: yes
@@ -233,7 +250,7 @@ banner:
       - Pale Dexter: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Inverted Chevron: yes
       - Chief Indented: no
@@ -247,7 +264,7 @@ banner:
       - Bend: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Dexter: yes
       - Inverted Chevron: no
@@ -261,7 +278,7 @@ banner:
       - Pale Sinister: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Pale Sinister: yes
@@ -276,7 +293,7 @@ banner:
       - Pale Dexter: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Per Fess: no
       - Pale Sinister: yes
@@ -292,7 +309,7 @@ banner:
       - Base: yes
       - Bordure: no
       - Base Sinister Canton: yes
-    large:
+    bold:
       - Banner: no
       - Bend: yes
       - Per Fess: no
@@ -309,7 +326,7 @@ banner:
       - Fess: yes
       - Pale Dexter: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Per Fess Inverted: no
       - Bend: yes
@@ -324,7 +341,7 @@ banner:
       - Chief: yes
       - Bend: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Inverted Chevron: yes
       - Chevron: yes
@@ -338,7 +355,7 @@ banner:
       - Chief: yes
       - Pale: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale: yes
       - Chief: yes
@@ -349,7 +366,7 @@ banner:
       - Base: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base: yes
       - Pale Sinister: yes
@@ -361,7 +378,7 @@ banner:
       - Chevron: no
       - Bend Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Dexter: yes
       - Chevron: no
@@ -374,7 +391,7 @@ banner:
       - Pale Dexter: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chevron: yes
       - Base Indented: no
@@ -388,7 +405,7 @@ banner:
       - Pale: no
       - Saltire: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend Sinister: yes
       - Bend: yes
@@ -399,7 +416,7 @@ banner:
       - Per Pale Inverted: no
       - Bend Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend: yes
       - Per Fess Inverted: no
@@ -411,7 +428,7 @@ banner:
       - Base: yes
       - Bend Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Inverted Chevron: yes
       - Chevron: yes
@@ -428,7 +445,7 @@ banner:
       - Pale Dexter: yes
       - Bend Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Pale Sinister: yes
@@ -442,7 +459,7 @@ banner:
       - Pale: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief Dexter Canton: yes
       - Bordure: no
@@ -455,7 +472,7 @@ banner:
       - Bend Sinister: yes
       - Base: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Inverted Chevron: yes
       - Chevron: yes
@@ -472,7 +489,7 @@ banner:
       - Pale Sinister: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Fess: yes
       - Pale Dexter: no
@@ -488,7 +505,7 @@ banner:
       - Pale Sinister: yes
       - Fess: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Per Fess: no
       - Pale Dexter: yes
@@ -504,7 +521,7 @@ banner:
       - Base Dexter Canton: yes
       - Chief: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Per Pale Inverted: no
       - Per Fess Inverted: no
@@ -521,7 +538,7 @@ banner:
       - Base: yes
       - Pale Dexter: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Sinister: yes
       - Per Fess: no
@@ -537,7 +554,7 @@ banner:
       - Bend Sinister: yes
       - Base Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Per Bend Sinister Inverted: no
@@ -550,7 +567,7 @@ banner:
       - Chief: yes
       - Fess: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Pale Dexter: yes
@@ -566,7 +583,7 @@ banner:
       - Chief: yes
       - Pale Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Dexter: yes
       - Per Fess Inverted: no
@@ -576,14 +593,14 @@ banner:
   ' ':
     default:
       - Banner: no
-    large:
+    bold:
       - Banner: no
   '.':
     default:
       - Banner: no
       - Base Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base Dexter Canton: yes
   ',':
@@ -592,7 +609,7 @@ banner:
       - Base Dexter Canton: yes
       - Bordure Indented: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base Dexter Canton: yes
       - Bordure Indented: no
@@ -602,7 +619,7 @@ banner:
       - Chief Sinister Canton: yes
       - Per Bend Sinister Inverted: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief Sinister Canton: yes
       - Per Bend Sinister Inverted: no
@@ -613,7 +630,7 @@ banner:
       - Chief Dexter Canton: yes
       - Pale: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief Sinister Canton: yes
       - Chief Dexter Canton: yes
@@ -624,7 +641,7 @@ banner:
       - Base Dexter Canton: yes
       - Chief Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base Dexter Canton: yes
       - Chief Dexter Canton: yes
@@ -635,7 +652,7 @@ banner:
       - Bordure Indented: no
       - Chief Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Base Dexter Canton: yes
       - Bordure Indented: no
@@ -648,7 +665,7 @@ banner:
       - Base Dexter Canton: yes
       - Per Pale Inverted: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Per Fess: yes
       - Fess: yes
@@ -663,7 +680,7 @@ banner:
       - Fess: yes
       - Base Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale Sinister: yes
       - Per Fess Inverted: no
@@ -677,7 +694,7 @@ banner:
       - Base Sinister Canton: yes
       - Chief Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend Sinister: yes
       - Base Sinister Canton: yes
@@ -694,7 +711,7 @@ banner:
       - Flower Charge: yes
       - Lozenge: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Flower Charge: yes
       - Lozenge: yes
@@ -706,7 +723,7 @@ banner:
       - Base: no
       - Fess: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale: yes
       - Chief: no
@@ -717,7 +734,7 @@ banner:
       - Banner: no
       - Fess: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Fess: yes
   '=':
@@ -727,7 +744,7 @@ banner:
       - Fess: no
       - Base: no
       - Bordure: no
-    large:
+    bold:
       - Banner: yes
       - Chief: no
       - Fess: no
@@ -737,7 +754,7 @@ banner:
       - Banner: no
       - Bend Sinister: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend Sinister: yes
   '\':
@@ -745,7 +762,7 @@ banner:
       - Banner: no
       - Bend: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend: yes
   '|':
@@ -753,7 +770,7 @@ banner:
       - Banner: no
       - Pale: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Pale: yes
   '[':
@@ -764,7 +781,7 @@ banner:
       - Pale Dexter: yes
       - Pale Sinister: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Base: yes
@@ -778,7 +795,7 @@ banner:
       - Pale Sinister: yes
       - Pale Dexter: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Chief: yes
       - Base: yes
@@ -791,7 +808,7 @@ banner:
       - Bend Sinister: yes
       - Per Pale: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend: yes
       - Bend Sinister: yes
@@ -803,7 +820,7 @@ banner:
       - Bend Sinister: yes
       - Per Pale Inverted: no
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bend: yes
       - Bend Sinister: yes
@@ -819,7 +836,7 @@ banner:
       - Chief Dexter Canton: yes
       - Base Dexter Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bordure Indented: yes
       - Pale: yes
@@ -837,7 +854,7 @@ banner:
       - Chief Sinister Canton: yes
       - Base Sinister Canton: yes
       - Bordure: no
-    large:
+    bold:
       - Banner: no
       - Bordure Indented: yes
       - Pale: yes

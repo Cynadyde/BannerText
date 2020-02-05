@@ -22,8 +22,8 @@ public class BannerWriter {
     public static final String DATA_COLOR = "";  // ChatColor.BLACK + "" + ChatColor.MAGIC + "" + ChatColor.BOLD;
     public static final String DATA_PREFIX = "BannerText-Writer";
 
-    private ItemStack item;
-    private String[] chars;
+    private final ItemStack item;
+    private final String[] chars;
     private int pos;
 
     private BannerWriter(ItemStack writerItem, String[] writerChars, int writerPos) {

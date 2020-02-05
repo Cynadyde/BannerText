@@ -15,7 +15,7 @@ public enum PatternStyle {
     UNDERLINE(ChatColor.UNDERLINE),
     ITALIC(ChatColor.ITALIC);
 
-    private ChatColor chat;
+    private final ChatColor chat;
 
     PatternStyle(ChatColor chat) {
         this.chat = chat;

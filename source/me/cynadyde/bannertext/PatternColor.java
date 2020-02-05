@@ -27,9 +27,9 @@ public enum PatternColor {
     YELLOW(Material.YELLOW_BANNER, DyeColor.YELLOW, ChatColor.YELLOW),
     WHITE(Material.WHITE_BANNER, DyeColor.WHITE, ChatColor.WHITE);
 
-    private Material banner;
-    private DyeColor dye;
-    private ChatColor chat;
+    private final Material banner;
+    private final DyeColor dye;
+    private final ChatColor chat;
 
     PatternColor(Material banner, DyeColor dye, ChatColor chat) {
         this.banner = banner;

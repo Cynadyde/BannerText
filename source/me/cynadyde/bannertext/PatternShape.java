@@ -48,8 +48,8 @@ public enum PatternShape {
     FLOWER("Flower Charge", PatternType.FLOWER),
     MOJANG("Mojang Charge", PatternType.MOJANG);
 
-    private String display;
-    private PatternType type;
+    private final String display;
+    private final PatternType type;
 
     PatternShape(String display, PatternType type) {
         this.display = display;

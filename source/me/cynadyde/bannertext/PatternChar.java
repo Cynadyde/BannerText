@@ -14,7 +14,7 @@ public class PatternChar {
 
     public static final PatternChar DEFAULT = new PatternChar(new HashMap<>());
 
-    private Map<PatternStyle, PatternDesign> designs;
+    private final Map<PatternStyle, PatternDesign> designs;
 
     public PatternChar(Map<PatternStyle, PatternDesign> designs) {
         this.designs = Collections.unmodifiableMap(designs);

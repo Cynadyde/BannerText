@@ -311,7 +311,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             return usage;
         }
 
-        public @NotNull String getDescription() {
+        public @NotNull String getDescr() {
             if (description == null) {
                 throw NOT_ENABLED.get();
             }
@@ -396,7 +396,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
                     plugin.getDescription().getDescription(),
                     plugin.getDescription().getWebsite(),
                     Arrays.stream(Cmd.values())
-                            .map((cmd -> Utils.chatFormat(cmdFormat, cmd.getUsage(), cmd.getDescription())))
+                            .map((cmd -> Utils.chatFormat(cmdFormat, cmd.getUsage(), cmd.getDescr())))
                             .collect(Collectors.joining("\n")));
 
             for (Msg msg : values()) {

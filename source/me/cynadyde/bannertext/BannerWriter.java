@@ -36,7 +36,7 @@ public class BannerWriter {
         List<FormattedChar> chars = new ArrayList<>();
         String text = Utils.getLoreData(writer, "text");
         for (int i = 0; i < text.length(); i += 4) {
-            chars.add(FormattedChar.fromString(text.substring(i, i + 4))); // throws
+            chars.add(FormattedChar.fromString(text.substring(i, i + 4))); // throws illegal arg
         }
         Integer pos = Utils.getInt(Utils.getLoreData(writer, "pos"));
         if (pos == null) {

@@ -34,6 +34,14 @@ public class PatternChar {
      */
     public ItemStack toBanner(PatternStyle ts, PatternColor fg, PatternColor bg) {
 
+        if (!designs.containsKey(ts)) {
+            if (designs.containsKey(PatternStyle.DEFAULT)) {
+                ts = PatternStyle.DEFAULT;
+            }
+            else {
+                return PatternDesign.DEFAULT.toBanner(fg, bg);
+            }
+        }
         return designs.getOrDefault(ts, PatternDesign.DEFAULT).toBanner(fg, bg);
     }
 }

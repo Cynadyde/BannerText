@@ -19,7 +19,7 @@ public class BannerFactory {
 
     private static final Map<Character, PatternChar> patternChars = new HashMap<>();
 
-    public static final Pattern FORMATTER_PATTERN = Pattern.compile("&(?:([klmnor])|([0-9a-f])([0-9a-f]))");
+    public static final Pattern FORMATTER_PATTERN = Pattern.compile("&(?:([klmnor])|([0-9a-f])([0-9a-f]))", Pattern.CASE_INSENSITIVE);
     public static final String RESULT_NAME_TEMPLATE = "&8< &b&l'%c' &8| &7%d of %d &8>";
     public static final String PACKAGE_NAME_TEMPLATE = "&8< &b&l%s &8| &7%d of %d &8>";
 

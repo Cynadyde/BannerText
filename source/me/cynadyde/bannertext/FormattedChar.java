@@ -42,7 +42,7 @@ public class FormattedChar {
 
     @Override
     public String toString() {
-        return String.format("%c%c%c%c", TS.getChar(), FG.getChar(), BG.getChar(), CH);
+        return "" + TS.getChar() + FG.getChar() + BG.getChar() + CH;
     }
 
     public static @NotNull FormattedChar fromString(String string) throws IllegalArgumentException {

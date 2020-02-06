@@ -160,9 +160,8 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             }
 
             if (event.getPlayer().isSneaking()) {
-                writer.augPos(1);
-//                getServer().getScheduler().runTaskLater(this,  // why is this is executed next tick..?
-//                        () -> writer.augPos(1), 1L);
+                getServer().getScheduler().runTaskLater(this,  // wait until after writing to change
+                        () -> writer.augPos(1), 1L);
             }
         }
     }

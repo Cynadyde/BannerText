@@ -5,6 +5,7 @@
 main: me.cynadyde.bannertext.BannerTextPlugin
 name: BannerText
 version: "1.15.2-0"
+api-version: "1.13"
 description: |
   Swiftly convert chat text into banners. Use '&[0-9a-f][0-9a-f]'
   to set the text and background colors. Use '&[klmnor]' to set
@@ -14,6 +15,8 @@ website: https://www.spigotmc.org/resources/bannertext.49049/
 commands:
   bannertext:
     description: "root plugin command"
+    aliases:
+      - bt
 permissions:
   bannertext.*:
     description: "grants access to all plugin features"
@@ -21,7 +24,7 @@ permissions:
     children:
       bannertext.get: true
       bannertext.write: true
-      bannertext.reload: true
+      bannertext.config: true
   bannertext.get:
     description: "grants ability to use the get command"
     default: false

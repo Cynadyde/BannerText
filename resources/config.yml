@@ -5,7 +5,7 @@
 chat:
   tag: "&8[&3BannerText&8]&r "
   help-page: |
-    &6%s
+    &6--===-( &e%s &6}-===--
     &b%s
     &7&a%s
     %s
@@ -48,7 +48,7 @@ case-sensitive: false
 #     - {MORE SHAPES}: {FRONT?} # Add as many patterns as you need to the banner.
 # 
 # {FRONT?} tells the plugin what color each pattern will be.
-# It will be either 'yes' for text color or 'no' for background.
+# It will be either 'true' for text color or 'false' for background.
 # 
 # Here are two different lists for valid pattern names:
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/banner/PatternType.html
@@ -78,786 +78,786 @@ case-sensitive: false
 banners:
   A:
     default:
-      - Banner: yes
-      - Per Fess: no
-      - Base: no
-      - Pale Sinister: yes
-      - Pale Dexter: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: true
+      - Per Fess: false
+      - Base: false
+      - Pale Sinister: true
+      - Pale Dexter: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Pale Dexter: yes
-      - Pale Sinister: yes
-      - Fess: yes
+      - Banner: false
+      - Chief: true
+      - Pale Dexter: true
+      - Pale Sinister: true
+      - Fess: true
   B:
     default:
-      - Banner: yes
-      - Pale: no
-      - Base: yes
-      - Chief: yes
-      - Fess: yes
-      - Bordure: no
+      - Banner: true
+      - Pale: false
+      - Base: true
+      - Chief: true
+      - Fess: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Pale Dexter: yes
-      - Pale Sinister: yes
-      - Fess: yes
-      - Base: yes
+      - Banner: false
+      - Chief: true
+      - Pale Dexter: true
+      - Pale Sinister: true
+      - Fess: true
+      - Base: true
   C:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Chief: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
+      - Banner: false
+      - Chief: true
+      - Base: true
   D:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Base: yes
-      - Per Bend: no
-      - Bend: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Base: true
+      - Per Bend: false
+      - Bend: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Lozenge: no
-      - Chief: yes
-      - Base: yes
-      - Pale Dexter: yes
+      - Banner: true
+      - Lozenge: false
+      - Chief: true
+      - Base: true
+      - Pale Dexter: true
   E:
     default:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: false
+      - Pale Dexter: true
+      - Chief: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: no
-      - Base: yes
-      - Chief: yes
-      - Pale Dexter: yes
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: false
+      - Base: true
+      - Chief: true
+      - Pale Dexter: true
   F:
     default:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: false
+      - Pale Dexter: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: no
-      - Pale Dexter: yes
-      - Chief: yes
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: false
+      - Pale Dexter: true
+      - Chief: true
   G:
     default:
-      - Banner: no
-      - Pale Sinister: yes
-      - Per Fess: no
-      - Base: yes
-      - Pale Dexter: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess: false
+      - Base: true
+      - Pale Dexter: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Sinister: yes
-      - Per Fess: no
-      - Base: yes
-      - Pale Dexter: yes
-      - Chief: yes
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess: false
+      - Base: true
+      - Pale Dexter: true
+      - Chief: true
   H:
     default:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: yes
-      - Pale Dexter: yes
-      - Bordure: no
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: true
+      - Pale Dexter: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Chief: no
-      - Base: no
-      - Pale Dexter: yes
-      - Pale Sinister: yes
+      - Banner: true
+      - Chief: false
+      - Base: false
+      - Pale Dexter: true
+      - Pale Sinister: true
   I:
     default:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base: yes
-      - Chief: yes
-      - Pale: yes
+      - Banner: false
+      - Base: true
+      - Chief: true
+      - Pale: true
   J:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Per Fess: no
-      - Base: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Per Fess: false
+      - Base: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Dexter: yes
-      - Per Fess: no
-      - Base: yes
-      - Pale Sinister: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Per Fess: false
+      - Base: true
+      - Pale Sinister: true
   K:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Pale Dexter: yes
-      - Fess: yes
-      - Per Pale Inverted: no
-      - Saltire: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Pale Dexter: true
+      - Fess: true
+      - Per Pale Inverted: false
+      - Saltire: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Fess: yes
-      - Pale Sinister: no
-      - Bend Sinister: yes
-      - Bend: yes
-      - Pale Dexter: yes
+      - Banner: false
+      - Fess: true
+      - Pale Sinister: false
+      - Bend Sinister: true
+      - Bend: true
+      - Pale Dexter: true
   L:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Dexter: yes
-      - Base: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Base: true
   M:
     default:
-      - Banner: no
-      - Inverted Chevron: yes
-      - Chief Indented: no
-      - Pale Dexter: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Inverted Chevron: true
+      - Chief Indented: false
+      - Pale Dexter: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Inverted Chevron: yes
-      - Chief Indented: no
-      - Pale Dexter: yes
-      - Pale Sinister: yes
+      - Banner: false
+      - Inverted Chevron: true
+      - Chief Indented: false
+      - Pale Dexter: true
+      - Pale Sinister: true
   N:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Per Bend: no
-      - Bend: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Per Bend: false
+      - Bend: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Dexter: yes
-      - Inverted Chevron: no
-      - Pale Sinister: yes
-      - Bend: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Inverted Chevron: false
+      - Pale Sinister: true
+      - Bend: true
   O:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Pale Sinister: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Chief: true
+      - Pale Sinister: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Pale Sinister: yes
-      - Base: yes
-      - Pale Dexter: yes
+      - Banner: false
+      - Chief: true
+      - Pale Sinister: true
+      - Base: true
+      - Pale Dexter: true
   P:
     default:
-      - Banner: yes
-      - Per Fess: no
-      - Pale Sinister: yes
-      - Base: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: true
+      - Per Fess: false
+      - Pale Sinister: true
+      - Base: false
+      - Pale Dexter: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Per Fess: no
-      - Pale Sinister: yes
-      - Base: no
-      - Chief: yes
-      - Pale Dexter: yes
+      - Banner: true
+      - Per Fess: false
+      - Pale Sinister: true
+      - Base: false
+      - Chief: true
+      - Pale Dexter: true
   Q:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Pale Sinister: yes
-      - Base: yes
-      - Bordure: no
-      - Base Sinister Canton: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Chief: true
+      - Pale Sinister: true
+      - Base: true
+      - Bordure: false
+      - Base Sinister Canton: true
     bold:
-      - Banner: no
-      - Bend: yes
-      - Per Fess: no
-      - Pale Dexter: yes
-      - Base: yes
-      - Pale Sinister: yes
-      - Chief: yes
+      - Banner: false
+      - Bend: true
+      - Per Fess: false
+      - Pale Dexter: true
+      - Base: true
+      - Pale Sinister: true
+      - Chief: true
   R:
     default:
-      - Banner: no
-      - Saltire: yes
-      - Per Pale: no
-      - Per Fess: yes
-      - Fess: yes
-      - Pale Dexter: yes
-      - Bordure: no
+      - Banner: false
+      - Saltire: true
+      - Per Pale: false
+      - Per Fess: true
+      - Fess: true
+      - Pale Dexter: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Per Fess Inverted: no
-      - Bend: yes
-      - Per Pale: no
-      - Pale Dexter: yes
-      - Chief: yes
-      - Fess: yes
+      - Banner: true
+      - Per Fess Inverted: false
+      - Bend: true
+      - Per Pale: false
+      - Pale Dexter: true
+      - Chief: true
+      - Fess: true
   S:
     default:
-      - Banner: no
-      - Base: yes
-      - Chief: yes
-      - Bend: yes
-      - Bordure: no
+      - Banner: false
+      - Base: true
+      - Chief: true
+      - Bend: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Inverted Chevron: yes
-      - Chevron: yes
-      - Chief Sinister Canton: yes
-      - Base Dexter Canton: yes
-      - Lozenge: no
-      - Bend: yes
+      - Banner: false
+      - Inverted Chevron: true
+      - Chevron: true
+      - Chief Sinister Canton: true
+      - Base Dexter Canton: true
+      - Lozenge: false
+      - Bend: true
   T:
     default:
-      - Banner: no
-      - Chief: yes
-      - Pale: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Pale: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale: yes
-      - Chief: yes
+      - Banner: false
+      - Pale: true
+      - Chief: true
   U:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Base: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Base: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base: yes
-      - Pale Sinister: yes
-      - Pale Dexter: yes
+      - Banner: false
+      - Base: true
+      - Pale Sinister: true
+      - Pale Dexter: true
   V:
     default:
-      - Banner: no
-      - Pale Dexter: yes
-      - Chevron: no
-      - Bend Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Dexter: true
+      - Chevron: false
+      - Bend Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Dexter: yes
-      - Chevron: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Chevron: false
+      - Bend Sinister: true
   W:
     default:
-      - Banner: no
-      - Chevron: yes
-      - Base Indented: no
-      - Pale Dexter: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Chevron: true
+      - Base Indented: false
+      - Pale Dexter: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chevron: yes
-      - Base Indented: no
-      - Pale Sinister: yes
-      - Pale Dexter: yes
+      - Banner: false
+      - Chevron: true
+      - Base Indented: false
+      - Pale Sinister: true
+      - Pale Dexter: true
   X:
     default:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale: no
-      - Saltire: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale: false
+      - Saltire: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend Sinister: yes
-      - Bend: yes
+      - Banner: false
+      - Bend Sinister: true
+      - Bend: true
   Y:
     default:
-      - Banner: no
-      - Saltire: yes
-      - Per Pale Inverted: no
-      - Bend Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Saltire: true
+      - Per Pale Inverted: false
+      - Bend Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend: yes
-      - Per Fess Inverted: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Bend: true
+      - Per Fess Inverted: false
+      - Bend Sinister: true
   Z:
     default:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Bend Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Bend Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Inverted Chevron: yes
-      - Chevron: yes
-      - Chief Dexter Canton: yes
-      - Base Sinister Canton: yes
-      - Lozenge: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Inverted Chevron: true
+      - Chevron: true
+      - Chief Dexter Canton: true
+      - Base Sinister Canton: true
+      - Lozenge: false
+      - Bend Sinister: true
   0:
     default:
-      - Banner: no
-      - Chief: yes
-      - Pale Sinister: yes
-      - Base: yes
-      - Pale Dexter: yes
-      - Bend Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Pale Sinister: true
+      - Base: true
+      - Pale Dexter: true
+      - Bend Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Pale Sinister: yes
-      - Base: yes
-      - Pale Dexter: yes
-      - Bend Sinister: yes
+      - Banner: false
+      - Chief: true
+      - Pale Sinister: true
+      - Base: true
+      - Pale Dexter: true
+      - Bend Sinister: true
   1:
     default:
-      - Banner: no
-      - Chief Dexter Canton: yes
-      - Pale: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Chief Dexter Canton: true
+      - Pale: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief Dexter Canton: yes
-      - Bordure: no
-      - Pale: yes
+      - Banner: false
+      - Chief Dexter Canton: true
+      - Bordure: false
+      - Pale: true
   2:
     default:
-      - Banner: no
-      - Chief: yes
-      - Lozenge: no
-      - Bend Sinister: yes
-      - Base: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Lozenge: false
+      - Bend Sinister: true
+      - Base: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Inverted Chevron: yes
-      - Chevron: yes
-      - Chief Dexter Canton: yes
-      - Base Sinister Canton: yes
-      - Lozenge: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Inverted Chevron: true
+      - Chevron: true
+      - Chief Dexter Canton: true
+      - Base Sinister Canton: true
+      - Lozenge: false
+      - Bend Sinister: true
   3:
     default:
-      - Banner: no
-      - Fess: yes
-      - Pale Dexter: no
-      - Base: yes
-      - Pale Sinister: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: false
+      - Fess: true
+      - Pale Dexter: false
+      - Base: true
+      - Pale Sinister: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Fess: yes
-      - Pale Dexter: no
-      - Base: yes
-      - Pale Sinister: yes
-      - Chief: yes
+      - Banner: false
+      - Fess: true
+      - Pale Dexter: false
+      - Base: true
+      - Pale Sinister: true
+      - Chief: true
   4:
     default:
-      - Banner: yes
-      - Per Fess: no
-      - Pale Dexter: yes
-      - Base: no
-      - Pale Sinister: yes
-      - Fess: yes
-      - Bordure: no
+      - Banner: true
+      - Per Fess: false
+      - Pale Dexter: true
+      - Base: false
+      - Pale Sinister: true
+      - Fess: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Per Fess: no
-      - Pale Dexter: yes
-      - Base: no
-      - Pale Sinister: yes
-      - Fess: yes
+      - Banner: true
+      - Per Fess: false
+      - Pale Dexter: true
+      - Base: false
+      - Pale Sinister: true
+      - Fess: true
   5:
     default:
-      - Banner: no
-      - Base: yes
-      - Bend: yes
-      - Bordure Indented: no
-      - Base Dexter Canton: yes
-      - Chief: yes
-      - Bordure: no
+      - Banner: false
+      - Base: true
+      - Bend: true
+      - Bordure Indented: false
+      - Base Dexter Canton: true
+      - Chief: true
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Per Pale Inverted: no
-      - Per Fess Inverted: no
-      - Base: yes
-      - Per Bend: no
-      - Bend: yes
-      - Chief: yes
+      - Banner: true
+      - Per Pale Inverted: false
+      - Per Fess Inverted: false
+      - Base: true
+      - Per Bend: false
+      - Bend: true
+      - Chief: true
   6:
     default:
-      - Banner: yes
-      - Per Fess Inverted: no
-      - Pale Sinister: yes
-      - Chief: no
-      - Base: yes
-      - Pale Dexter: yes
-      - Bordure: no
+      - Banner: true
+      - Per Fess Inverted: false
+      - Pale Sinister: true
+      - Chief: false
+      - Base: true
+      - Pale Dexter: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Sinister: yes
-      - Per Fess: no
-      - Base: yes
-      - Fess: yes
-      - Pale Dexter: yes
-      - Chief: yes
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess: false
+      - Base: true
+      - Fess: true
+      - Pale Dexter: true
+      - Chief: true
   7:
     default:
-      - Banner: no
-      - Chief: yes
-      - Per Bend Sinister Inverted: no
-      - Bend Sinister: yes
-      - Base Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Per Bend Sinister Inverted: false
+      - Bend Sinister: true
+      - Base Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Per Bend Sinister Inverted: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Chief: true
+      - Per Bend Sinister Inverted: false
+      - Bend Sinister: true
   8:
     default:
-      - Banner: yes
-      - Pale: no
-      - Base: yes
-      - Chief: yes
-      - Fess: yes
-      - Bordure: no
+      - Banner: true
+      - Pale: false
+      - Base: true
+      - Chief: true
+      - Fess: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Pale Dexter: yes
-      - Pale Sinister: yes
-      - Fess: yes
-      - Base: yes
+      - Banner: false
+      - Chief: true
+      - Pale Dexter: true
+      - Pale Sinister: true
+      - Fess: true
+      - Base: true
   9:
     default:
-      - Banner: yes
-      - Per Fess: no
-      - Pale Dexter: yes
-      - Base: no
-      - Chief: yes
-      - Pale Sinister: yes
-      - Bordure: no
+      - Banner: true
+      - Per Fess: false
+      - Pale Dexter: true
+      - Base: false
+      - Chief: true
+      - Pale Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Dexter: yes
-      - Per Fess Inverted: no
-      - Fess: yes
-      - Chief: yes
-      - Pale Sinister: yes
+      - Banner: false
+      - Pale Dexter: true
+      - Per Fess Inverted: false
+      - Fess: true
+      - Chief: true
+      - Pale Sinister: true
   ' ':
     default:
-      - Banner: no
+      - Banner: false
     bold:
-      - Banner: no
+      - Banner: false
   '.':
     default:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Base Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base Dexter Canton: yes
+      - Banner: false
+      - Base Dexter Canton: true
   ',':
     default:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Bordure Indented: no
-      - Bordure: no
+      - Banner: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Bordure Indented: no
-  '''':
+      - Banner: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+  "'":
     default:
-      - Banner: no
-      - Chief Sinister Canton: yes
-      - Per Bend Sinister Inverted: no
-      - Bordure: no
+      - Banner: false
+      - Chief Sinister Canton: true
+      - Per Bend Sinister Inverted: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief Sinister Canton: yes
-      - Per Bend Sinister Inverted: no
+      - Banner: false
+      - Chief Sinister Canton: true
+      - Per Bend Sinister Inverted: false
   '"':
     default:
-      - Banner: no
-      - Chief Sinister Canton: yes
-      - Chief Dexter Canton: yes
-      - Pale: no
-      - Bordure: no
+      - Banner: false
+      - Chief Sinister Canton: true
+      - Chief Dexter Canton: true
+      - Pale: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief Sinister Canton: yes
-      - Chief Dexter Canton: yes
-      - Pale: no
+      - Banner: false
+      - Chief Sinister Canton: true
+      - Chief Dexter Canton: true
+      - Pale: false
   ':':
     default:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Chief Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Base Dexter Canton: true
+      - Chief Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Chief Dexter Canton: yes
+      - Banner: false
+      - Base Dexter Canton: true
+      - Chief Dexter Canton: true
   ';':
     default:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Bordure Indented: no
-      - Chief Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+      - Chief Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Base Dexter Canton: yes
-      - Bordure Indented: no
-      - Chief Dexter Canton: yes
+      - Banner: false
+      - Base Dexter Canton: true
+      - Bordure Indented: false
+      - Chief Dexter Canton: true
   '!':
     default:
-      - Banner: no
-      - Per Fess: yes
-      - Fess: yes
-      - Base Dexter Canton: yes
-      - Per Pale Inverted: no
-      - Bordure: no
+      - Banner: false
+      - Per Fess: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Per Pale Inverted: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Per Fess: yes
-      - Fess: yes
-      - Base Dexter Canton: yes
-      - Per Pale Inverted: no
+      - Banner: false
+      - Per Fess: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Per Pale Inverted: false
   '?':
     default:
-      - Banner: no
-      - Pale Sinister: yes
-      - Per Fess Inverted: no
-      - Chief: yes
-      - Fess: yes
-      - Base Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess Inverted: false
+      - Chief: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale Sinister: yes
-      - Per Fess Inverted: no
-      - Chief: yes
-      - Fess: yes
-      - Base Dexter Canton: yes
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess Inverted: false
+      - Chief: true
+      - Fess: true
+      - Base Dexter Canton: true
   '%':
     default:
-      - Banner: no
-      - Bend Sinister: yes
-      - Base Sinister Canton: yes
-      - Chief Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Bend Sinister: true
+      - Base Sinister Canton: true
+      - Chief Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend Sinister: yes
-      - Base Sinister Canton: yes
-      - Chief Dexter Canton: yes
+      - Banner: false
+      - Bend Sinister: true
+      - Base Sinister Canton: true
+      - Chief Dexter Canton: true
   '^':
     default:
-      - Banner base: no
-      - Chief: yes
-      - Lozenge: no
-      - Bordure Indented: no
+      - Banner: false
+      - Chief: true
+      - Lozenge: false
+      - Bordure Indented: false
   '*':
     default:
-      - Banner: no
-      - Flower Charge: yes
-      - Lozenge: yes
-      - Bordure: no
+      - Banner: false
+      - Flower Charge: true
+      - Lozenge: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Flower Charge: yes
-      - Lozenge: yes
+      - Banner: false
+      - Flower Charge: true
+      - Lozenge: true
   '+':
     default:
-      - Banner: no
-      - Pale: yes
-      - Chief: no
-      - Base: no
-      - Fess: yes
-      - Bordure: no
+      - Banner: false
+      - Pale: true
+      - Chief: false
+      - Base: false
+      - Fess: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale: yes
-      - Chief: no
-      - Base: no
-      - Fess: yes
+      - Banner: false
+      - Pale: true
+      - Chief: false
+      - Base: false
+      - Fess: true
   '-':
     default:
-      - Banner: no
-      - Fess: yes
-      - Bordure: no
+      - Banner: false
+      - Fess: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Fess: yes
+      - Banner: false
+      - Fess: true
   '=':
     default:
-      - Banner: yes
-      - Chief: no
-      - Fess: no
-      - Base: no
-      - Bordure: no
+      - Banner: true
+      - Chief: false
+      - Fess: false
+      - Base: false
+      - Bordure: false
     bold:
-      - Banner: yes
-      - Chief: no
-      - Fess: no
-      - Base: no
+      - Banner: true
+      - Chief: false
+      - Fess: false
+      - Base: false
   '/':
     default:
-      - Banner: no
-      - Bend Sinister: yes
-      - Bordure: no
+      - Banner: false
+      - Bend Sinister: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend Sinister: yes
+      - Banner: false
+      - Bend Sinister: true
   '\':
     default:
-      - Banner: no
-      - Bend: yes
-      - Bordure: no
+      - Banner: false
+      - Bend: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend: yes
+      - Banner: false
+      - Bend: true
   '|':
     default:
-      - Banner: no
-      - Pale: yes
-      - Bordure: no
+      - Banner: false
+      - Pale: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Pale: yes
+      - Banner: false
+      - Pale: true
   '[':
     default:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale Dexter: yes
-      - Pale Sinister: no
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale Dexter: true
+      - Pale Sinister: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale Dexter: yes
-      - Pale Sinister: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale Dexter: true
+      - Pale Sinister: false
   ']':
     default:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale Sinister: yes
-      - Pale Dexter: no
-      - Bordure: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale Sinister: true
+      - Pale Dexter: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Chief: yes
-      - Base: yes
-      - Pale Sinister: yes
-      - Pale Dexter: no
+      - Banner: false
+      - Chief: true
+      - Base: true
+      - Pale Sinister: true
+      - Pale Dexter: false
   '(':
     default:
-      - Banner: no
-      - Bend: yes
-      - Bend Sinister: yes
-      - Per Pale: no
-      - Bordure: no
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend: yes
-      - Bend Sinister: yes
-      - Per Pale: no
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale: false
   ')':
     default:
-      - Banner: no
-      - Bend: yes
-      - Bend Sinister: yes
-      - Per Pale Inverted: no
-      - Bordure: no
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale Inverted: false
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bend: yes
-      - Bend Sinister: yes
-      - Per Pale Inverted: no
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale Inverted: false
   '{':
     default:
-      - Banner: no
-      - Bordure Indented: yes
-      - Pale: yes
-      - Per Pale Inverted: no
-      - Base Indented: yes
-      - Chief Indented: yes
-      - Chief Dexter Canton: yes
-      - Base Dexter Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Bordure Indented: true
+      - Pale: true
+      - Per Pale Inverted: false
+      - Base Indented: true
+      - Chief Indented: true
+      - Chief Dexter Canton: true
+      - Base Dexter Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bordure Indented: yes
-      - Pale: yes
-      - Per Pale Inverted: no
-      - Base Indented: yes
-      - Chief Indented: yes
+      - Banner: false
+      - Bordure Indented: true
+      - Pale: true
+      - Per Pale Inverted: false
+      - Base Indented: true
+      - Chief Indented: true
   '}':
     default:
-      - Banner: no
-      - Bordure Indented: yes
-      - Pale: yes
-      - Per Pale: no
-      - Base Indented: yes
-      - Chief Indented: yes
-      - Chief Sinister Canton: yes
-      - Base Sinister Canton: yes
-      - Bordure: no
+      - Banner: false
+      - Bordure Indented: true
+      - Pale: true
+      - Per Pale: false
+      - Base Indented: true
+      - Chief Indented: true
+      - Chief Sinister Canton: true
+      - Base Sinister Canton: true
+      - Bordure: false
     bold:
-      - Banner: no
-      - Bordure Indented: yes
-      - Pale: yes
-      - Per Pale: no
-      - Base Indented: yes
-      - Chief Indented: yes
+      - Banner: false
+      - Bordure Indented: true
+      - Pale: true
+      - Per Pale: false
+      - Base Indented: true
+      - Chief Indented: true

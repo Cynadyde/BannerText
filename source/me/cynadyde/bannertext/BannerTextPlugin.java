@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class BannerTextPlugin extends JavaPlugin implements Listener {
 
     private static final Supplier<IllegalStateException> NOT_ENABLED = () ->
-            new IllegalStateException("plugin has not been fully enabled yet.");
+            new IllegalStateException("plugin has not been fully enabled yet");
 
     private PluginCommand rootCmd;
 
@@ -71,7 +71,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
                         return false;
                     }
                     if (args.length < 2) {
-                        Msg.BAD_USAGE.to(sender);
+                        Msg.BAD_USAGE.to(sender, (hasGetArg ? Cmd.GET : Cmd.WRITE).getUsage());
                         return false;
                     }
                     Player player = (Player) sender;
@@ -113,8 +113,8 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
 
         if (command == rootCmd) {
-
             List<String> options = new ArrayList<>();
+
             if (args.length == 1) {
                 for (Cmd cmd : Cmd.ROOT.getChildren()) {
                     if (cmd.getLabel().startsWith(args[0].toLowerCase())) {
@@ -138,7 +138,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
         if (event.getItem() == null) {
             return;
         }
-        BannerWriter writer = BannerWriter.createFrom(event.getItem());
+        BannerWriter writer = BannerWriter.from(event.getItem());
         if (writer == null) {
             return;
         }
@@ -146,7 +146,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
                 || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 
             if (event.getPlayer().isSneaking()) {
-                writer.setPos(writer.getPos() - 1);
+                writer.augPos(-1);
             }
         }
         else if (event.getAction() == Action.RIGHT_CLICK_AIR
@@ -160,8 +160,9 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             }
 
             if (event.getPlayer().isSneaking()) {
-                getServer().getScheduler().runTaskLater(this,  // why is this is executed next tick..?
-                        () -> writer.setPos(writer.getPos() + 1), 1L);
+                writer.augPos(1);
+//                getServer().getScheduler().runTaskLater(this,  // why is this is executed next tick..?
+//                        () -> writer.augPos(1), 1L);
             }
         }
     }
@@ -229,7 +230,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
         if (!getConfig().getBoolean("case-sensitive")) {
             text = text.toUpperCase();
         }
-        ItemStack writer = BannerWriter.createNew(text).getItem();
+        ItemStack writer = BannerFactory.buildBannerWriter(text);
         Utils.giveItems(player, writer);
 
         this.debugMsg("took %dms to run: giveTextBannerWriter(%s, %s);",
@@ -270,26 +271,27 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
      */
     public enum Cmd {
 
-        ROOT("bannertext", Cmd.GET, Cmd.WRITE, Cmd.RELOAD),
+        ROOT("bannertext", null),
         GET("get", Perm.GET),
         WRITE("write", Perm.WRITE),
         RELOAD("reloadconfig", Perm.CONFIG);
 
+        static {
+            ROOT.children = Collections.unmodifiableList(
+                    Arrays.asList(Cmd.GET, Cmd.WRITE, Cmd.RELOAD));
+        }
+
         private final String label;
         private final Perm permission;
-        private final List<Cmd> children;
+        private List<Cmd> children;
 
         private String usage;
         private String description;
 
-        Cmd(String label, Cmd... children) {
-            this(label, null, children);
-        }
-
-        Cmd(String label, Perm permission, Cmd... children) {
+        Cmd(String label, Perm permission) {
             this.label = label;
             this.permission = permission;
-            this.children = Collections.unmodifiableList(Arrays.asList(children));
+            this.children = Collections.unmodifiableList(new ArrayList<>());
         }
 
         public @NotNull String getLabel() {

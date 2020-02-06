@@ -5,10 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a generic design that can be converted into a banner,
@@ -16,11 +13,11 @@ import java.util.Objects;
  */
 public class PatternDesign {
 
-    public static final PatternDesign DEFAULT = new PatternDesign(new HashMap<>());
+    public static final PatternDesign DEFAULT = new PatternDesign(new LinkedHashMap<>());
 
     private final Map<PatternShape, Boolean> shapes;
 
-    public PatternDesign(Map<PatternShape, Boolean> shapes) {
+    public PatternDesign(LinkedHashMap<PatternShape, Boolean> shapes) {
         this.shapes = Collections.unmodifiableMap(shapes);
     }
 

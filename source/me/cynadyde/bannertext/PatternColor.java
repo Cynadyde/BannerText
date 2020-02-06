@@ -3,6 +3,7 @@ package me.cynadyde.bannertext;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An enumeration of different text colors a banner
@@ -49,21 +50,12 @@ public enum PatternColor {
         return dye;
     }
 
-    public static PatternColor getByMat(Material mat) {
-        for (PatternColor color : values()) {
-            if (color.getMat() == mat) {
-                return color;
-            }
-        }
-        return null;
-    }
-
-    public static PatternColor getByChar(char c) {
+    public static @NotNull PatternColor getByChar(char c) throws IllegalArgumentException {
         for (PatternColor color : values()) {
             if (color.getChar() == Character.toLowerCase(c)) {
                 return color;
             }
         }
-        return null;
+        throw new IllegalArgumentException("invalid color char: " + c);
     }
 }

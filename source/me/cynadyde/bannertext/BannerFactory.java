@@ -20,8 +20,8 @@ public class BannerFactory {
     private static final Map<Character, PatternChar> patternChars = new HashMap<>();
 
     public static final Pattern FORMATTER_PATTERN = Pattern.compile("&(?:([klmnor])|([0-9a-f])([0-9a-f]))");
-    public static final String RESULT_NAME_TEMPLATE = Utils.chatFormat("&8< &3'%c&%c%c' &b&l'%c' &8| &7%d of %d &8>");
-    public static final String PACKAGE_NAME_TEMPLATE = Utils.chatFormat("&8< &b&l%s &8| &7%d of %d &8>");
+    public static final String RESULT_NAME_TEMPLATE = "&8< &b&l'%c' &8| &7%d of %d &8>";
+    public static final String PACKAGE_NAME_TEMPLATE = "&8< &b&l%s &8| &7%d of %d &8>";
 
     public static final Set<Material> BANNER_MATERIALS;
 
@@ -75,15 +75,16 @@ public class BannerFactory {
                 chars.add(new FormattedChar(ts, fg, bg, text.charAt(i)));
                 i++;
             }
-            if (tsStr != null) { ts = PatternStyle.getByChar(tsStr.charAt(0)); }
             if (fgStr != null) { fg = PatternColor.getByChar(fgStr.charAt(0)); }
             if (bgStr != null) { bg = PatternColor.getByChar(bgStr.charAt(0)); }
-            if (pickup != -1) { i = pickup; }
-
-            if (ts == PatternStyle.DEFAULT) {
-                fg = PatternColor.WHITE;
-                bg = PatternColor.BLACK;
+            if (tsStr != null) {
+                ts = PatternStyle.getByChar(tsStr.charAt(0));
+                if (ts == PatternStyle.DEFAULT) {
+                    fg = PatternColor.WHITE;
+                    bg = PatternColor.BLACK;
+                }
             }
+            if (pickup != -1) { i = pickup; }
         }
         return chars;
     }
@@ -112,8 +113,7 @@ public class BannerFactory {
 
             ItemMeta bannerMeta = banner.getItemMeta();
             if (bannerMeta != null) {
-                bannerMeta.setDisplayName(String.format(RESULT_NAME_TEMPLATE,
-                        c.getTs().getChar(), c.getFg().getChar(), c.getBg().getChar(),
+                bannerMeta.setDisplayName(Utils.chatFormat(RESULT_NAME_TEMPLATE,
                         c.getChar(), i, fText.size() - 1));
 
                 banner.setItemMeta(bannerMeta);
@@ -157,7 +157,7 @@ public class BannerFactory {
             BlockStateMeta chestMeta = Objects.requireNonNull((BlockStateMeta) chest.getItemMeta());
             Chest chestState = (Chest) chestMeta.getBlockState();
 
-            chestMeta.setDisplayName(String.format(PACKAGE_NAME_TEMPLATE, name, i, stacks.size() - 1));
+            chestMeta.setDisplayName(Utils.chatFormat(PACKAGE_NAME_TEMPLATE, name, i, stacks.size() - 1));
             chestState.getBlockInventory().addItem(stack.toArray(new ItemStack[0]));
 
             chestMeta.setBlockState(chestState);
@@ -172,7 +172,7 @@ public class BannerFactory {
      * Creates a banner writer for the given text.
      */
     public static ItemStack buildBannerWriter(String text) {
-        return BannerWriter.createNew(text).getItem();
+        return new BannerWriter(BannerFactory.parseText(text)).toItem();
     }
 
     /**
@@ -192,6 +192,9 @@ public class BannerFactory {
         }
 
         for (String charKey : yaml.getKeys(false)) {
+            if (charKey.isEmpty()) {
+                charKey = " ";
+            }
             if (charKey.length() != 1) {
                 plugin.getLogger().warning("Malformed config node: " +
                         "key isn't a single character: '" + KEY + "." + charKey + "'.");
@@ -210,7 +213,7 @@ public class BannerFactory {
             ConfigurationSection ymlDesigns = Objects.requireNonNull(yaml.getConfigurationSection(charKey));
             for (String styleKey : ymlDesigns.getKeys(false)) {
 
-                Map<PatternShape, Boolean> shapes = new HashMap<>();
+                LinkedHashMap<PatternShape, Boolean> shapes = new LinkedHashMap<>();
 
                 List<Map<?, ?>> ymlShapes = ymlDesigns.getMapList(styleKey);
 
@@ -222,17 +225,17 @@ public class BannerFactory {
                                 "wrong structure at '" + KEY + "." + character + "." + styleKey + "'");
                         continue;
                     }
-
-                    Object ymlShapeKey = entry.keySet().toArray()[0];
-                    Object ymlLayer = entry.values().toArray()[0];
-
-                    if (!(ymlShapeKey instanceof String) || !(ymlLayer instanceof String)) {
+                    String shapeKey;
+                    Boolean layer;
+                    try {
+                        shapeKey = (String) entry.keySet().toArray()[0];
+                        layer = (Boolean) entry.values().toArray()[0];
+                    }
+                    catch (ClassCastException ex) {
                         plugin.getLogger().warning("Malformed config node: " +
                                 "wrong structure at '" + KEY + "." + character + "." + styleKey + "[" + i + "]'");
                         continue;
                     }
-                    String shapeKey = (String) entry.keySet().toArray()[0];
-                    Boolean layer = (Boolean) entry.values().toArray()[0];
 
                     PatternShape shape = PatternShape.getByDisplay(shapeKey);
                     if (shape == null) {

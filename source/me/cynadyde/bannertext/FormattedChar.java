@@ -1,5 +1,9 @@
 package me.cynadyde.bannertext;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 /**
  * A character, including its text style,
  * foreground color, and background color.
@@ -14,9 +18,9 @@ public class FormattedChar {
     private final char CH;
 
     public FormattedChar(PatternStyle ts, PatternColor fg, PatternColor bg, char ch) {
-        this.FG = fg;
-        this.BG = bg;
-        this.TS = ts;
+        this.FG = Objects.requireNonNull(fg);
+        this.BG = Objects.requireNonNull(bg);
+        this.TS = Objects.requireNonNull(ts);
         this.CH = ch;
     }
 
@@ -38,11 +42,18 @@ public class FormattedChar {
 
     @Override
     public String toString() {
-        if (TS == PatternStyle.DEFAULT) {
-            return String.format("&%c&%c%c%c", TS.getChar(), FG.getChar(), BG.getChar(), CH);
+        return String.format("%c%c%c%c", TS.getChar(), FG.getChar(), BG.getChar(), CH);
+    }
+
+    public static @NotNull FormattedChar fromString(String string) throws IllegalArgumentException {
+        if (string.length() != 4) {
+            throw new IllegalArgumentException("string length must be 4");
         }
-        else {
-            return String.format("&%c%c&%c%c", FG.getChar(), BG.getChar(), TS.getChar(), CH);
-        }
+        return new FormattedChar(
+                PatternStyle.getByChar(string.charAt(0)),
+                PatternColor.getByChar(string.charAt(1)),
+                PatternColor.getByChar(string.charAt(2)),
+                string.charAt(3)
+        );
     }
 }

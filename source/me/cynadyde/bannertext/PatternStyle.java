@@ -25,12 +25,12 @@ public enum PatternStyle {
         return chat.getChar();
     }
 
-    public static PatternStyle getByChar(char c) {
+    public static PatternStyle getByChar(char c) throws IllegalArgumentException {
         for (PatternStyle style : values()) {
             if (style.getChar() == Character.toLowerCase(c)) {
                 return style;
             }
         }
-        return null;
+        throw new IllegalArgumentException("invalid style char: " + c);
     }
 }

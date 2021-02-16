@@ -5,19 +5,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * Represents a generic design that can be converted into a banner,
- * given a foreground and a background pattern color.
+ * A banner design template for a character of a specific style (i.e. default, bold, underline, etc.)
  */
-public class PatternDesign {
+public class BannerDesign {
 
-    public static final PatternDesign DEFAULT = new PatternDesign(new LinkedHashMap<>());
+    public static final BannerDesign DEFAULT = new BannerDesign(new LinkedHashMap<>());
 
     private final Map<PatternShape, Boolean> shapes;
 
-    public PatternDesign(LinkedHashMap<PatternShape, Boolean> shapes) {
+    public BannerDesign(LinkedHashMap<PatternShape, Boolean> shapes) {
         this.shapes = Collections.unmodifiableMap(shapes);
     }
 

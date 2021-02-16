@@ -1,5 +1,5 @@
 # 
-# Configuration file for BannerText Minecraft Plugin
+# config.yml for BannerText-1.16.4-0 SpigotMC plugin
 # https://www.spigotmc.org/resources/bannertext.49049/
 #
 chat:
@@ -13,6 +13,7 @@ chat:
   messages:
     NO_PERMS: "&cYou do not have permission to do that!"
     NOT_PLAYER: "&cYou must be a player to do that!"
+    NOT_GM1: "&cYou must be in creative mode to use that command!"
     BAD_CMD: "&cUnknown command given: %s"
     BAD_USAGE: "&cBad usage: &6%s"
     BAD_ARG: "&cBad argument: &e%s"
@@ -21,6 +22,7 @@ chat:
     GOT_WRITER: "&aGot a writer successfully!"
     GOT_BANNERS: "&aGot banners successfully!"
     DID_CONFIG: "&6The config was reloaded by &e%s"
+    WRITER_USAGE: "&aHold SHIFT when you place or break to move the writer's position forward or back.\n&b(creative mode only)"
   commands:
     ROOT:
       usage: "/bannertext"
@@ -44,14 +46,17 @@ case-sensitive: false
 # 
 # {CHARACTER}:                  # A single character that can be read from the game chat
 #   {STYLE}:                    # Can be default, obfuscated, bold, strike, underline, or italic.
-#     - Banner: {FRONT?}        # All banners should start with a base 'Banner' pattern.
-#     - {MORE SHAPES}: {FRONT?} # Add as many patterns as you need to the banner.
+#     - Banner: {LAYER}         # All banners should start with a base 'Banner' pattern.
+#     - {MORE SHAPES}: {LAYER}  # Add as many patterns as you need to the banner.
 # 
-# {FRONT?} tells the plugin what color each pattern will be.
-# It will be either 'true' for text color or 'false' for background.
+# {LAYER} tells the plugin what color each pattern shape will be.
+# It will be either 'true' for text layer color or 'false' for background layer color.
 # 
 # Here are two different lists for valid pattern names:
-# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/banner/PatternType.html
+# - https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/banner/PatternType.html
+# - https://minecraft.gamepedia.com/Banner/Patterns
+#
+# Listed again from the minecraft wiki:
 #
 # Banner                   # Saltire                     # Per Fess
 # Base Dexter Canton       # Cross                       # Per Pale Inverted
@@ -65,8 +70,8 @@ case-sensitive: false
 # Pale                     # Per Bend Inverted           # Skull Charge
 # Fess                     # Per Bend Sinister Inverted  # Flower Charge
 # Bend                     # Roundel                     # Mojang Charge
-# Bend Sinister            # Lozenge
-# Paly                     # Per Pale
+# Bend Sinister            # Lozenge                     # Globe
+# Paly                     # Per Pale                    # Snout
 #
 # Examples of each shape: https://minecraft.gamepedia.com/Banner_Pattern#Usage
 # Online banner-making tool: http://www.planetminecraft.com/banner/
@@ -115,6 +120,7 @@ banners:
       - Bordure: false
     bold:
       - Banner: false
+      - Pale Dexter: true
       - Chief: true
       - Base: true
   D:

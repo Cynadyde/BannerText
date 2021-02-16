@@ -1,100 +1,152 @@
 package me.cynadyde.bannertext;
 
+import me.cynadyde.bannertext.BannerTextPlugin.DataKey;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Represents a held banner that is used by a player
- * to as a writer tool for some text.
+ * Represents an item that the player can use as a wand
+ * to spawn down banners for a stored string of text.
  */
 public class BannerWriter {
 
     public static final String WRITER_NAME_TEMPLATE = "&8< &3&lBannerText Writer &8| &3%d of %d &8>";
 
     private final ItemStack item;
-    private final List<FormattedChar> chars;
-    private int pos;
 
-    public BannerWriter(@NotNull List<FormattedChar> chars) {
+    public BannerWriter(@NotNull List<ParsedSlot> slots) {
         this.item = new ItemStack(Material.WHITE_BANNER, 1);
-        this.chars = Collections.unmodifiableList(new ArrayList<>(chars));
-        this.pos = 0;
+
+        ItemMeta itemMeta = item.getItemMeta();
+        if (!(itemMeta instanceof BannerMeta)) {
+            throw new IllegalStateException("writer item does not have BannerMeta");
+        }
+        DataKey.WRITER_TEXT.setData(itemMeta, slots.stream().map(ParsedSlot::toString).collect(Collectors.joining()));
+        DataKey.WRITER_POS.setData(itemMeta, 0);
+
+        item.setItemMeta(itemMeta);
         updateItem();
     }
 
     public BannerWriter(@NotNull ItemStack writer) throws IllegalArgumentException {
-        this.item = Objects.requireNonNull(writer);
-
-        List<FormattedChar> chars = new ArrayList<>();
-        String text = Utils.getLoreData(writer, "text");
-        for (int i = 0; i < text.length(); i += 4) {
-            chars.add(FormattedChar.fromString(text.substring(i, i + 4))); // throws illegal arg
+        if (!(writer.getItemMeta() instanceof BannerMeta)) {
+            throw new IllegalArgumentException("that writer item does not have a BannerMeta");
         }
-        Integer pos = Utils.getInt(Utils.getLoreData(writer, "pos"));
-        if (pos == null) {
-            throw new IllegalArgumentException("writer item had no pos data");
+        if (!DataKey.WRITER_POS.hasData(writer.getItemMeta())) {
+            throw new IllegalArgumentException("that writer item is missing pos data");
         }
-        this.chars = Collections.unmodifiableList(chars);
-        this.pos = pos;
+        if (!DataKey.WRITER_TEXT.hasData(writer.getItemMeta())) {
+            throw new IllegalArgumentException("that writer item is missing slots data");
+        }
+        this.item = writer.clone();
     }
 
-    public List<FormattedChar> getChars() {
-        return chars;
+    public @NotNull List<ParsedSlot> getSlots() {
+        List<ParsedSlot> slots = new ArrayList<>();
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            String text = DataKey.WRITER_TEXT.getData(itemMeta);
+            if (text != null) {
+                for (int i = 0; i < text.length(); i += 4) {
+                    try {
+                        slots.add(ParsedSlot.fromString(text.substring(i, i + 4)));
+                    }
+                    catch (IllegalArgumentException ex) {
+                        slots.add(ParsedSlot.DEFAULT);
+                    }
+                }
+            }
+        }
+        if (slots.isEmpty()) {
+            slots.add(ParsedSlot.DEFAULT);
+        }
+        return Collections.unmodifiableList(slots);
     }
 
     public int getPos() {
-        return pos;
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            Integer pos = DataKey.WRITER_POS.getData(itemMeta);
+            if (pos != null && pos >= 0) {
+                return pos;
+            }
+        }
+        return 0;
     }
 
-    public ItemStack getCurBanner() {
-        FormattedChar c = chars.get(pos);
-        return BannerFactory.getBanner(c.getChar(), c.getTs(), c.getFg(), c.getBg());
+    public @NotNull ItemStack getCurBanner() {
+        ParsedSlot slot = getSlots().get(getPos());
+        ItemStack banner = BannerFactory.getBanner(slot.getChar(), slot.getTs(), slot.getFg(), slot.getBg());
+        ItemMeta meta = banner.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(null);
+            meta.setLore(null);
+            DataKey.WRITER_TEXT.removeData(meta);
+            banner.setItemMeta(meta);
+        }
+        return banner;
     }
 
     public void setPos(int newPos) {
-        this.pos = Math.floorMod(newPos, chars.size());
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            DataKey.WRITER_POS.setData(itemMeta, Math.floorMod(newPos, getSlots().size()));
+            item.setItemMeta(itemMeta);
+        }
         updateItem();
     }
 
-    public void augPos(int amount) {
-        setPos(pos + amount);
+    public void scrollNext() {
+        setPos(getPos() + 1);
     }
 
-    public ItemStack toItem() {
+    public void scrollPrev() {
+        setPos(getPos() - 1);
+    }
+
+    public @NotNull ItemStack toItem() {
         return item.clone();
     }
 
     public void updateItem() {
-
-        Utils.setDisplayName(item, Utils.chatFormat(WRITER_NAME_TEMPLATE, getPos() + 1, chars.size()));
-        Utils.setLoreData(item, "pos", String.valueOf(pos));
-        Utils.setLoreData(item, "text", chars.stream().map(FormattedChar::toString).collect(Collectors.joining()));
-
         if (!(item.getItemMeta() instanceof BannerMeta)) {
             throw new IllegalStateException("writer item does not have BannerMeta");
         }
-        BannerMeta meta = (BannerMeta) item.getItemMeta();
-
         ItemStack modelBanner = getCurBanner();
         item.setType(modelBanner.getType());
-        meta.setPatterns(Objects.requireNonNull((BannerMeta) modelBanner.getItemMeta()).getPatterns());
 
-        item.setItemMeta(meta);
+        BannerMeta itemMeta = (BannerMeta) item.getItemMeta();
+        BannerMeta modelMeta;
+        {
+            if (!(modelBanner.getItemMeta() instanceof BannerMeta)) {
+                throw new IllegalStateException("writer's model item did not have BannerMeta!");
+            }
+            modelMeta = (BannerMeta) modelBanner.getItemMeta();
+        }
+
+        List<ParsedSlot> slots = getSlots();
+        int pos = getPos();
+
+        String displayName = Utils.chatFormat(WRITER_NAME_TEMPLATE, pos + 1, slots.size());
+        String description = Utils.chatFormat(BannerTextPlugin.Msg.WRITER_USAGE.getTemplate());
+
+        itemMeta.setDisplayName(displayName);
+        itemMeta.setLore(Utils.loreFormat(description));
+        itemMeta.setPatterns(modelMeta.getPatterns());
+
+        item.setItemMeta(itemMeta);
     }
 
-    /**
-     * Creates a writer object using the given valid item,
-     * returning null if there was an illegal argument exception.
-     */
-    public static BannerWriter from(ItemStack writer) {
+    public static @Nullable BannerWriter from(ItemStack writer) {
         try {
             return new BannerWriter(writer);
         }

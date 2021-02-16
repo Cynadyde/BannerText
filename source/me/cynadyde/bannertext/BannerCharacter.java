@@ -7,16 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a collection of banner designs that can be
- * used to represent a text character.
+ * A collection of banner design templates that represent a text symbol.
  */
-public class PatternChar {
+public class BannerCharacter {
 
-    public static final PatternChar DEFAULT = new PatternChar(new HashMap<>());
+    public static final BannerCharacter DEFAULT = new BannerCharacter(new HashMap<>());
 
-    private final Map<PatternStyle, PatternDesign> designs;
+    private final Map<PatternStyle, BannerDesign> designs;
 
-    public PatternChar(Map<PatternStyle, PatternDesign> designs) {
+    public BannerCharacter(Map<PatternStyle, BannerDesign> designs) {
         this.designs = Collections.unmodifiableMap(designs);
     }
 
@@ -24,7 +23,7 @@ public class PatternChar {
      * Gets a mapping of banner styles to banner designs
      * that can represent this text character.
      */
-    public Map<PatternStyle, PatternDesign> getDesigns() {
+    public Map<PatternStyle, BannerDesign> getDesigns() {
         return designs;
     }
 
@@ -39,9 +38,9 @@ public class PatternChar {
                 ts = PatternStyle.DEFAULT;
             }
             else {
-                return PatternDesign.DEFAULT.toBanner(fg, bg);
+                return BannerDesign.DEFAULT.toBanner(fg, bg);
             }
         }
-        return designs.getOrDefault(ts, PatternDesign.DEFAULT).toBanner(fg, bg);
+        return designs.getOrDefault(ts, BannerDesign.DEFAULT).toBanner(fg, bg);
     }
 }

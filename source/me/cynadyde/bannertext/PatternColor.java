@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An enumeration of different text colors a banner
@@ -48,6 +49,15 @@ public enum PatternColor {
 
     public DyeColor getDyeColor() {
         return dye;
+    }
+
+    public static @Nullable PatternColor getByMat(Material material) {
+        for (PatternColor color : values()) {
+            if (color.getMat() == material) {
+                return color;
+            }
+        }
+        return null;
     }
 
     public static @NotNull PatternColor getByChar(char c) throws IllegalArgumentException {

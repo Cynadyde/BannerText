@@ -13,11 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Facilitates the creation of banners and banner text writers.
+ * A collection of functions that facilitate the creation of banners and banner writers.
  */
 public class BannerFactory {
 
-    private static final Map<Character, PatternChar> patternChars = new HashMap<>();
+    private static final Map<Character, BannerCharacter> patternChars = new HashMap<>();
 
     public static final Pattern FORMATTER_PATTERN = Pattern.compile("&(?:([klmnor])|([0-9a-f])([0-9a-f]))", Pattern.CASE_INSENSITIVE);
     public static final String RESULT_NAME_TEMPLATE = "&8< &b&l'%c' &8| &7%d of %d &8>";
@@ -43,15 +43,15 @@ public class BannerFactory {
     /**
      * Looks through the given text and specifies the text style, color, and background of each character.
      */
-    public static List<FormattedChar> parseText(String chatText) {
+    public static List<ParsedSlot> parseText(String chatText) {
 
         String text = chatText.replace("&&", "&");
         Matcher matcher = FORMATTER_PATTERN.matcher(text);
-        List<FormattedChar> chars = new ArrayList<>();
+        List<ParsedSlot> chars = new ArrayList<>();
 
-        PatternStyle ts = PatternStyle.DEFAULT;
-        PatternColor fg = PatternColor.WHITE;
-        PatternColor bg = PatternColor.BLACK;
+        PatternStyle ts = ParsedSlot.DEFAULT.getTs();
+        PatternColor fg = ParsedSlot.DEFAULT.getFg();
+        PatternColor bg = ParsedSlot.DEFAULT.getBg();
 
         String tsStr, fgStr, bgStr;
         int i = 0, stop, pickup;
@@ -72,19 +72,25 @@ public class BannerFactory {
                 pickup = -1;
             }
             while (i < stop) {
-                chars.add(new FormattedChar(ts, fg, bg, text.charAt(i)));
+                chars.add(new ParsedSlot(ts, fg, bg, text.charAt(i)));
                 i++;
             }
-            if (fgStr != null) { fg = PatternColor.getByChar(fgStr.charAt(0)); }
-            if (bgStr != null) { bg = PatternColor.getByChar(bgStr.charAt(0)); }
+            if (fgStr != null) {
+                fg = PatternColor.getByChar(fgStr.charAt(0));
+            }
+            if (bgStr != null) {
+                bg = PatternColor.getByChar(bgStr.charAt(0));
+            }
             if (tsStr != null) {
                 ts = PatternStyle.getByChar(tsStr.charAt(0));
-                if (ts == PatternStyle.DEFAULT) {
-                    fg = PatternColor.WHITE;
-                    bg = PatternColor.BLACK;
+                if (ts == ParsedSlot.DEFAULT.getTs()) {
+                    fg = ParsedSlot.DEFAULT.getFg();
+                    bg = ParsedSlot.DEFAULT.getBg();
                 }
             }
-            if (pickup != -1) { i = pickup; }
+            if (pickup != -1) {
+                i = pickup;
+            }
         }
         return chars;
     }
@@ -95,7 +101,7 @@ public class BannerFactory {
      */
     public static @NotNull ItemStack getBanner(char character, PatternStyle ts, PatternColor fg, PatternColor bg) {
 
-        return patternChars.getOrDefault(character, PatternChar.DEFAULT).toBanner(ts, fg, bg);
+        return patternChars.getOrDefault(character, BannerCharacter.DEFAULT).toBanner(ts, fg, bg);
     }
 
     /**
@@ -103,12 +109,12 @@ public class BannerFactory {
      */
     public static List<ItemStack> buildBanners(String text) {
 
-        List<FormattedChar> fText = BannerFactory.parseText(text);
+        List<ParsedSlot> fText = BannerFactory.parseText(text);
         List<ItemStack> banners = new ArrayList<>();
 
         for (int i = 0; i < fText.size(); i++) {
 
-            FormattedChar c = fText.get(i);
+            ParsedSlot c = fText.get(i);
             ItemStack banner = getBanner(c.getChar(), c.getTs(), c.getFg(), c.getBg());
 
             ItemMeta bannerMeta = banner.getItemMeta();
@@ -208,7 +214,7 @@ public class BannerFactory {
                 character = charKey.charAt(0);
             }
 
-            Map<PatternStyle, PatternDesign> designs = new HashMap<>();
+            Map<PatternStyle, BannerDesign> designs = new HashMap<>();
 
             ConfigurationSection ymlDesigns = Objects.requireNonNull(yaml.getConfigurationSection(charKey));
             for (String styleKey : ymlDesigns.getKeys(false)) {
@@ -250,9 +256,9 @@ public class BannerFactory {
                     }
                     shapes.put(shape, layer);
                 }
-                designs.put(PatternStyle.valueOf(styleKey.toUpperCase()), new PatternDesign(shapes));
+                designs.put(PatternStyle.valueOf(styleKey.toUpperCase()), new BannerDesign(shapes));
             }
-            patternChars.put(character, new PatternChar(designs));
+            patternChars.put(character, new BannerCharacter(designs));
         }
     }
 }

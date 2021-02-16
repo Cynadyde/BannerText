@@ -2,27 +2,36 @@ package me.cynadyde.bannertext;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * The main class of the BannerText Spigot MC Plugin.
+ * The main class of the BannerText SpigotMC Plugin.
  */
 public class BannerTextPlugin extends JavaPlugin implements Listener {
 
@@ -30,6 +39,15 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             new IllegalStateException("plugin has not been fully enabled yet");
 
     private PluginCommand rootCmd;
+
+    public static @NotNull BannerTextPlugin get() {
+        try {
+            return (BannerTextPlugin) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("BannerText"));
+        }
+        catch (NullPointerException ex) {
+            throw NOT_ENABLED.get();
+        }
+    }
 
     /**
      * Reloads the plugin's configuration, registers its
@@ -52,7 +70,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
      */
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
-            @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+                             @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
 
         if (command == getRootCmd()) {
             if (args.length > 0) {
@@ -66,27 +84,30 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
                         Msg.NO_PERMS.to(sender);
                         return false;
                     }
-                    if (!(sender instanceof Player)) {
-                        Msg.NOT_PLAYER.to(sender);
-                        return false;
-                    }
                     if (args.length < 2) {
                         Msg.BAD_USAGE.to(sender, (hasGetArg ? Cmd.GET : Cmd.WRITE).getUsage());
                         return false;
                     }
+                    if (!(sender instanceof Player)) {
+                        Msg.NOT_PLAYER.to(sender);
+                        return false;
+                    }
                     Player player = (Player) sender;
+                    if (player.getGameMode() != GameMode.CREATIVE) {
+                        Msg.NOT_GM1.to(player);
+                        return false;
+                    }
                     String textArg = String.join(" ", Utils.arraySlice(args, 1, null));
 
                     if (hasGetArg) {
                         doGiveTextBanners(player, textArg);
                         Msg.GOT_BANNERS.to(player);
-                        return true;
                     }
                     else {
                         doGiveBannerWriter(player, textArg);
                         Msg.GOT_WRITER.to(player);
-                        return true;
                     }
+                    return true;
                 }
                 else if (args[0].equalsIgnoreCase(Cmd.RELOAD.getLabel())) {
 
@@ -110,7 +131,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
      */
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender,
-            @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+                                      @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
 
         if (command == rootCmd) {
             List<String> options = new ArrayList<>();
@@ -132,37 +153,44 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
     /**
      * Handles a player's usage of the banner writer.
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if (event.getItem() == null) {
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             return;
         }
-        BannerWriter writer = BannerWriter.from(event.getItem());
+        ItemStack heldItem = event.getItem();
+        if (heldItem == null) {
+            return;
+        }
+        BannerWriter writer = BannerWriter.from(heldItem);
         if (writer == null) {
             return;
         }
+        boolean isSneaking = event.getPlayer().isSneaking();
+        PlayerInventory inv = event.getPlayer().getInventory();
+
         if (event.getAction() == Action.LEFT_CLICK_AIR
                 || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 
-            if (event.getPlayer().isSneaking()) {
-                writer.augPos(-1);
-            }
+            getServer().getScheduler().runTaskLater(this, () -> {
+                if (isSneaking) {
+                    writer.scrollPrev();
+                }
+                inv.setItemInMainHand(writer.toItem());
+            }, 0L);
+
         }
         else if (event.getAction() == Action.RIGHT_CLICK_AIR
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE
-                    && event.useInteractedBlock() != Event.Result.DENY
-                    && event.useItemInHand() != Event.Result.DENY) {
 
-                event.getItem().setAmount(2);  // keeps item stack size at 1
-            }
-
-            if (event.getPlayer().isSneaking()) {
-                getServer().getScheduler().runTaskLater(this,  // wait until after writing to change
-                        () -> writer.augPos(1), 1L);
-            }
+            getServer().getScheduler().runTaskLater(this, () -> {
+                if (isSneaking) {
+                    writer.scrollNext();
+                }
+                inv.setItemInMainHand(writer.toItem());
+            }, 0L);
         }
     }
 
@@ -345,6 +373,7 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
 
         NO_PERMS,
         NOT_PLAYER,
+        NOT_GM1,
         BAD_CMD,
         BAD_USAGE,
         BAD_ARG,
@@ -352,7 +381,8 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
         ERR_BANNERS,
         GOT_WRITER,
         GOT_BANNERS,
-        DID_CONFIG;
+        DID_CONFIG,
+        WRITER_USAGE;
 
         private static String tag;
         private static String info;
@@ -387,10 +417,10 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
             ConfigurationSection chat = Objects.requireNonNull(plugin.getConfig().getConfigurationSection("chat"));
             ConfigurationSection chatMsgs = Objects.requireNonNull(chat.getConfigurationSection("messages"));
 
-            tag = Utils.chatFormat(chat.getString("tag"));
+            tag = Utils.chatFormat(Objects.requireNonNull(chat.getString("tag")));
 
-            String helpPage = chat.getString("help-page");
-            String cmdFormat = chat.getString("cmd-format");
+            String helpPage = Objects.requireNonNull(chat.getString("help-page"));
+            String cmdFormat = Objects.requireNonNull(chat.getString("cmd-format"));
 
             info = Utils.chatFormat(helpPage,
                     plugin.getDescription().getFullName(),
@@ -417,6 +447,45 @@ public class BannerTextPlugin extends JavaPlugin implements Listener {
                 throw NOT_ENABLED.get();
             }
             return info;
+        }
+    }
+
+    /**
+     * The plugin's {@link PersistentDataContainer} keys.
+     *
+     * @param <Z> the data type retrieved from the persistent data container
+     */
+    public static class DataKey<Z> {
+
+        public static final DataKey<String> WRITER_TEXT = new DataKey<>("writer_text", PersistentDataType.STRING);
+        public static final DataKey<Integer> WRITER_POS = new DataKey<>("writer_pos", PersistentDataType.INTEGER);
+
+        private DataKey(@NotNull String name, @NotNull PersistentDataType<?, Z> type) {
+            this.pathName = name;
+            this.dataType = type;
+        }
+
+        private final String pathName;
+        private final PersistentDataType<?, Z> dataType;
+
+        public NamespacedKey getKey() {
+            return new NamespacedKey(BannerTextPlugin.get(), pathName);
+        }
+
+        public boolean hasData(@NotNull PersistentDataHolder holder) {
+            return holder.getPersistentDataContainer().has(getKey(), dataType);
+        }
+
+        public @Nullable Z getData(@NotNull PersistentDataHolder holder) {
+            return holder.getPersistentDataContainer().get(getKey(), dataType);
+        }
+
+        public void setData(@NotNull PersistentDataHolder holder, @NotNull Z data) {
+            holder.getPersistentDataContainer().set(getKey(), dataType, data);
+        }
+
+        public void removeData(@NotNull PersistentDataHolder holder) {
+            holder.getPersistentDataContainer().remove(getKey());
         }
     }
 }

@@ -3,8 +3,11 @@ package me.cynadyde.bannertext;
 import org.bukkit.block.banner.PatternType;
 
 /**
- * Represents a pattern shape that can be
- * added to a banner.
+ * Represents a pattern shape that can be added to a banner.
+ * <ul>
+ * <li><a>https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/banner/PatternType.html</a>
+ * <li><a>https://minecraft.gamepedia.com/Banner/Patterns</a>
+ * </ul>
  */
 public enum PatternShape {
 
@@ -46,7 +49,9 @@ public enum PatternShape {
     CREEPER("Creeper Charge", PatternType.CREEPER),
     SKULL("Skull Charge", PatternType.SKULL),
     FLOWER("Flower Charge", PatternType.FLOWER),
-    MOJANG("Mojang Charge", PatternType.MOJANG);
+    MOJANG("Mojang Charge", PatternType.MOJANG),
+    GLOBE("Globe", PatternType.GLOBE),
+    PIGLIN("Snout", PatternType.PIGLIN);
 
     private final String display;
     private final PatternType type;

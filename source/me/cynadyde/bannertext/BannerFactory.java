@@ -201,17 +201,22 @@ public class BannerFactory {
             if (charKey.isEmpty()) {
                 charKey = " ";
             }
-            if (charKey.length() != 1) {
+            else if (charKey.length() != 1 && !charKey.equalsIgnoreCase("dot")) {
                 plugin.getLogger().warning("Malformed config node: " +
                         "key isn't a single character: '" + KEY + "." + charKey + "'.");
                 continue;
             }
             char character;
-            if (!plugin.getConfig().getBoolean("case-sensitive")) {
-                character = charKey.toUpperCase().charAt(0);
-            }
-            else {
-                character = charKey.charAt(0);
+            {
+                if (charKey.equalsIgnoreCase("dot")) {
+                    character = '.';
+                }
+                else if (!plugin.getConfig().getBoolean("case-sensitive")) {
+                    character = charKey.toUpperCase().charAt(0);
+                }
+                else {
+                    character = charKey.charAt(0);
+                }
             }
 
             Map<PatternStyle, BannerDesign> designs = new HashMap<>();
@@ -228,7 +233,7 @@ public class BannerFactory {
 
                     if (entry.isEmpty()) {
                         plugin.getLogger().warning("Malformed config node: " +
-                                "wrong structure at '" + KEY + "." + character + "." + styleKey + "'");
+                                "wrong structure at '" + KEY + "." + charKey + "." + styleKey + "'");
                         continue;
                     }
                     String shapeKey;
@@ -239,19 +244,19 @@ public class BannerFactory {
                     }
                     catch (ClassCastException ex) {
                         plugin.getLogger().warning("Malformed config node: " +
-                                "wrong structure at '" + KEY + "." + character + "." + styleKey + "[" + i + "]'");
+                                "wrong structure at '" + KEY + "." + charKey + "." + styleKey + "[" + i + "]'");
                         continue;
                     }
 
                     PatternShape shape = PatternShape.getByDisplay(shapeKey);
                     if (shape == null) {
                         plugin.getLogger().warning("Malformed config node: invalid banner shape in "
-                                + "'" + KEY + "." + character + "" + styleKey + "': '" + shapeKey + "'");
+                                + "'" + KEY + "." + charKey + "." + styleKey + "': '" + shapeKey + "'");
                         continue;
                     }
                     if (layer == null) {
                         plugin.getLogger().warning("Malformed config node: invalid shape layer in "
-                                + "'" + KEY + "." + character + "" + styleKey + "': '" + layer + "'");
+                                + "'" + KEY + "." + charKey + "." + styleKey + "': '" + layer + "'");
                         continue;
                     }
                     shapes.put(shape, layer);

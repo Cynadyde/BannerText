@@ -2,6 +2,9 @@
 # config.yml for BannerText-1.16.4-0 SpigotMC plugin
 # https://www.spigotmc.org/resources/bannertext.49049/
 #
+# This config is not updated by the plugin. When you update the plugin, you should
+# rename this file and use '/bannertext reloadconfig' to generate an updated one.
+#
 chat:
   tag: "&8[&3BannerText&8]&r "
   help-page: |
@@ -22,7 +25,7 @@ chat:
     GOT_WRITER: "&aGot a writer successfully!"
     GOT_BANNERS: "&aGot banners successfully!"
     DID_CONFIG: "&6The config was reloaded by &e%s"
-    WRITER_USAGE: "&aHold SHIFT when you place or break to move the writer's position forward or back.\n&b(creative mode only)"
+    WRITER_USAGE: "&b(creative mode tool)\n&aHold SHIFT when you place or break to move the writer's position forward or back."
   commands:
     ROOT:
       usage: "/bannertext"
@@ -52,33 +55,33 @@ case-sensitive: false
 # {LAYER} tells the plugin what color each pattern shape will be.
 # It will be either 'true' for text layer color or 'false' for background layer color.
 # 
-# Here are two different lists for valid pattern names:
-# - https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/banner/PatternType.html
-# - https://minecraft.gamepedia.com/Banner/Patterns
+# Here is the current list of valid pattern names, taken from the minecraft wiki:
+# https://minecraft.gamepedia.com/Banner/Patterns
 #
-# Listed again from the minecraft wiki:
+# Banner                   # Per Bend Inverted             Roundel
+# Base                     # Per Bend Sinister Inverted    Lozenge
+# Chief                    # Per Pale                      Bordure
+# Pale Dexter              # Per Pale Inverted             Bordure Indented
+# Pale Sinister            # Per Fess                      Field Masoned
+# Pale                     # Per Fess Inverted             Gradient
+# Fess                     # Base Dexter Canton            Base Gradient
+# Bend                     # Base Sinister Canton          Creeper Charge
+# Bend Sinister            # Chief Dexter Canton           Skull Charge
+# Paly                     # Chief Sinister Canton         Flower Charge
+# Saltire                  # Chevron                       Thing
+# Cross                    # Inverted Chevron              Globe
+# Per Bend Sinister        # Base Indented                 Snout
+# Per Bend                 # Chief Indented
 #
-# Banner                   # Saltire                     # Per Fess
-# Base Dexter Canton       # Cross                       # Per Pale Inverted
-# Base Sinister Canton     # Cross                       # Per Fess Inverted
-# Chief Dexter Canton      # Chevron                     # Bordure
-# Chief Sinister Canton    # Inverted Chevron            # Bordure Indented
-# Base                     # Base Indented               # Creeper Charge
-# Chief                    # Chief Indented              # Gradient
-# Pale Dexter              # Per Bend Sinister           # Base Gradient
-# Pale Sinister            # Per Bend                    # Field Masoned
-# Pale                     # Per Bend Inverted           # Skull Charge
-# Fess                     # Per Bend Sinister Inverted  # Flower Charge
-# Bend                     # Roundel                     # Mojang Charge
-# Bend Sinister            # Lozenge                     # Globe
-# Paly                     # Per Pale                    # Snout
-#
-# Examples of each shape: https://minecraft.gamepedia.com/Banner_Pattern#Usage
 # Online banner-making tool: http://www.planetminecraft.com/banner/
 #
-# Borderless letters from: https://www.youtube.com/watch?v=jLYvPD_vbZg
-# Bordered letters from: https://www.youtube.com/watch?v=PncIlxt8TtI
-# Numbers & symbols from: https://www.youtube.com/watch?v=xODU7WWTXYE
+# Banner Design Credits:
+# - https://www.youtube.com/watch?v=jLYvPD_vbZg
+# - https://www.youtube.com/watch?v=PncIlxt8TtI
+# - https://www.youtube.com/watch?v=xODU7WWTXYE
+# - https://www.planetminecraft.com/project/phoenixs-banners-letters-symbols-vectors-and-more/
+# - https://www.planetminecraft.com/banner/dollar-sign-141797/
+# - https://www.planetminecraft.com/banner/mojang-dollar/
 #
 banners:
   A:
@@ -99,10 +102,10 @@ banners:
   B:
     default:
       - Banner: true
-      - Pale: false
-      - Base: true
-      - Chief: true
-      - Fess: true
+      - Thing: false
+      - Pale Sinister: true
+      - Bordure Indented: false
+      - Pale Dexter: true
       - Bordure: false
     bold:
       - Banner: false
@@ -225,18 +228,16 @@ banners:
   K:
     default:
       - Banner: false
+      - Bend: true
+      - Per Fess: false
+      - Bend Sinister: true
       - Pale Dexter: true
-      - Pale Dexter: true
-      - Fess: true
-      - Per Pale Inverted: false
-      - Saltire: true
       - Bordure: false
     bold:
       - Banner: false
-      - Fess: true
-      - Pale Sinister: false
-      - Bend Sinister: true
       - Bend: true
+      - Per Fess: false
+      - Bend Sinister: true
       - Pale Dexter: true
   L:
     default:
@@ -308,13 +309,12 @@ banners:
       - Pale Dexter: true
   Q:
     default:
-      - Banner: false
-      - Pale Dexter: true
-      - Chief: true
+      - Banner: true
+      - Lozenge: false
       - Pale Sinister: true
-      - Base: true
-      - Bordure: false
       - Base Sinister Canton: true
+      - Pale Dexter: true
+      - Bordure: false
     bold:
       - Banner: false
       - Bend: true
@@ -345,8 +345,9 @@ banners:
       - Banner: false
       - Base: true
       - Chief: true
+      - Lozenge: false
       - Bend: true
-      - Bordure: false
+      - Bordure Indented: false
     bold:
       - Banner: false
       - Inverted Chevron: true
@@ -442,6 +443,11 @@ banners:
       - Base Sinister Canton: true
       - Lozenge: false
       - Bend Sinister: true
+  ' ':
+    default:
+      - Banner: false
+    bold:
+      - Banner: false
   0:
     default:
       - Banner: false
@@ -537,21 +543,22 @@ banners:
       - Chief: true
   6:
     default:
-      - Banner: true
-      - Per Fess Inverted: false
+      - Banner: false
       - Pale Sinister: true
-      - Chief: false
-      - Base: true
+      - Per Fess: false
+      - Chief: true
       - Pale Dexter: true
+      - Fess: true
+      - Base: true
       - Bordure: false
     bold:
       - Banner: false
       - Pale Sinister: true
       - Per Fess: false
-      - Base: true
-      - Fess: true
-      - Pale Dexter: true
       - Chief: true
+      - Pale Dexter: true
+      - Fess: true
+      - Base: true
   7:
     default:
       - Banner: false
@@ -596,12 +603,49 @@ banners:
       - Fess: true
       - Chief: true
       - Pale Sinister: true
-  ' ':
+  '+':
     default:
       - Banner: false
+      - Pale: true
+      - Chief: false
+      - Base: false
+      - Fess: true
+      - Bordure: false
     bold:
       - Banner: false
-  '.':
+      - Pale: true
+      - Chief: false
+      - Base: false
+      - Fess: true
+  '-':
+    default:
+      - Banner: false
+      - Fess: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Fess: true
+  '=':
+    default:
+      - Banner: true
+      - Chief: false
+      - Fess: false
+      - Base: false
+      - Bordure: false
+    bold:
+      - Banner: true
+      - Chief: false
+      - Fess: false
+      - Base: false
+  '_':
+    default:
+      - Banner: false
+      - Base: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Base: true
+  'dot':  # special case ('.' doesn't get recognized)
     default:
       - Banner: false
       - Base Dexter Canton: true
@@ -663,98 +707,30 @@ banners:
       - Base Dexter Canton: true
       - Bordure Indented: false
       - Chief Dexter Canton: true
-  '!':
+  '`':
     default:
       - Banner: false
-      - Per Fess: true
-      - Fess: true
-      - Base Dexter Canton: true
-      - Per Pale Inverted: false
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Per Fess: true
-      - Fess: true
-      - Base Dexter Canton: true
-      - Per Pale Inverted: false
-  '?':
-    default:
-      - Banner: false
-      - Pale Sinister: true
-      - Per Fess Inverted: false
-      - Chief: true
-      - Fess: true
-      - Base Dexter Canton: true
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Pale Sinister: true
-      - Per Fess Inverted: false
-      - Chief: true
-      - Fess: true
-      - Base Dexter Canton: true
-  '%':
-    default:
-      - Banner: false
-      - Bend Sinister: true
-      - Base Sinister Canton: true
       - Chief Dexter Canton: true
+      - Per Bend Inverted: false
       - Bordure: false
     bold:
       - Banner: false
-      - Bend Sinister: true
-      - Base Sinister Canton: true
       - Chief Dexter Canton: true
-  '^':
+      - Per Bend Inverted: false
+  '~':
     default:
       - Banner: false
-      - Chief: true
-      - Lozenge: false
-      - Bordure Indented: false
-  '*':
-    default:
-      - Banner: false
-      - Flower Charge: true
-      - Lozenge: true
+      - Chief Dexter Canton: true
+      - Chief Sinister Canton: true
+      - Chief Indented: false
+      - Flower Charge: false
       - Bordure: false
     bold:
       - Banner: false
-      - Flower Charge: true
-      - Lozenge: true
-  '+':
-    default:
-      - Banner: false
-      - Pale: true
-      - Chief: false
-      - Base: false
-      - Fess: true
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Pale: true
-      - Chief: false
-      - Base: false
-      - Fess: true
-  '-':
-    default:
-      - Banner: false
-      - Fess: true
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Fess: true
-  '=':
-    default:
-      - Banner: true
-      - Chief: false
-      - Fess: false
-      - Base: false
-      - Bordure: false
-    bold:
-      - Banner: true
-      - Chief: false
-      - Fess: false
-      - Base: false
+      - Chief Dexter Canton: true
+      - Chief Sinister Canton: true
+      - Chief Indented: false
+      - Flower Charge: false
   '/':
     default:
       - Banner: false
@@ -779,6 +755,151 @@ banners:
     bold:
       - Banner: false
       - Pale: true
+  '?':
+    default:
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess Inverted: false
+      - Chief: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Pale Sinister: true
+      - Per Fess Inverted: false
+      - Chief: true
+      - Fess: true
+      - Base Dexter Canton: true
+  '!':
+    default:
+      - Banner: false
+      - Per Fess: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Per Pale Inverted: false
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Per Fess: true
+      - Fess: true
+      - Base Dexter Canton: true
+      - Per Pale Inverted: false
+  '@':
+    default:
+      - Banner: false
+      - Pale Sinister: true
+      - Bordure Indented: false
+      - Chief: false
+      - Base: false
+      - Thing: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Pale Sinister: true
+      - Bordure Indented: false
+      - Chief: false
+      - Base: false
+      - Thing: true
+  '#':
+    default:
+      - Banner: false
+      - Saltire: true
+      - Fess: true
+      - Cross: false
+      - Pale: false
+      - Snout: true
+      - Paly: false
+      - Base: false
+      - Chief: false
+    bold:
+      - Banner: false
+      - Saltire: true
+      - Pale: false
+      - Snout: true
+      - Paly: false
+      - Base: false
+      - Chief: false
+  '$':
+    default:
+      - Banner: false
+      - Base: true
+      - Chief: true
+      - Lozenge: false
+      - Bend: true
+      - Bordure Indented: false
+      - Bordure: false
+      - Pale: false
+      - Pale: false
+      - Pale: true
+    bold:
+      - Banner: false
+      - Paly: true
+      - Pale Dexter: false
+      - Pale Sinister: false
+      - Thing: true
+  '%':
+    default:
+      - Banner: false
+      - Bend Sinister: true
+      - Base Sinister Canton: true
+      - Chief Dexter Canton: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Bend Sinister: true
+      - Base Sinister Canton: true
+      - Chief Dexter Canton: true
+  '^':
+    default:
+      - Banner: false
+      - Chief: true
+      - Lozenge: false
+      - Bordure Indented: false
+  '&':
+    default:
+      - Banner: false
+      - Base: true
+      - Chief: true
+      - Lozenge: false
+      - Saltire: true
+      - Bordure Indented: false
+      - Base Sinister Canton: true
+      - Bordure: false
+  '*':
+    default:
+      - Banner: false
+      - Flower Charge: true
+      - Lozenge: true
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Flower Charge: true
+      - Lozenge: true
+  '(':
+    default:
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale: false
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale: false
+  ')':
+    default:
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale Inverted: false
+      - Bordure: false
+    bold:
+      - Banner: false
+      - Bend: true
+      - Bend Sinister: true
+      - Per Pale Inverted: false
   '[':
     default:
       - Banner: false
@@ -807,30 +928,6 @@ banners:
       - Base: true
       - Pale Sinister: true
       - Pale Dexter: false
-  '(':
-    default:
-      - Banner: false
-      - Bend: true
-      - Bend Sinister: true
-      - Per Pale: false
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Bend: true
-      - Bend Sinister: true
-      - Per Pale: false
-  ')':
-    default:
-      - Banner: false
-      - Bend: true
-      - Bend Sinister: true
-      - Per Pale Inverted: false
-      - Bordure: false
-    bold:
-      - Banner: false
-      - Bend: true
-      - Bend Sinister: true
-      - Per Pale Inverted: false
   '{':
     default:
       - Banner: false
@@ -867,3 +964,15 @@ banners:
       - Per Pale: false
       - Base Indented: true
       - Chief Indented: true
+  '<':
+    default:
+      - Banner: false
+      - Lozenge: true
+      - Per Pale Inverted: false
+      - Roundel: false
+  '>':
+    default:
+      - Banner: false
+      - Lozenge: true
+      - Per Pale: false
+      - Roundel: false

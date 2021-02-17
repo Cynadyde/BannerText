@@ -49,7 +49,7 @@ public enum PatternShape {
     CREEPER("Creeper Charge", PatternType.CREEPER),
     SKULL("Skull Charge", PatternType.SKULL),
     FLOWER("Flower Charge", PatternType.FLOWER),
-    MOJANG("Mojang Charge", PatternType.MOJANG),
+    MOJANG("Thing", PatternType.MOJANG),
     GLOBE("Globe", PatternType.GLOBE),
     PIGLIN("Snout", PatternType.PIGLIN);
 
